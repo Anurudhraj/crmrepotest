@@ -4,7 +4,7 @@
 
     <!-- NAVBAR LEFT(MOBILE MENU COLLAPSE) START-->
     <div class="navbar-left float-left d-flex align-items-center">
-        <x-app-title class="d-none d-lg-flex" :pageTitle="$pageTitle"></x-app-title>
+        <x-app-title class="d-none d-lg-flex" :pageTitle="__($pageTitle)"></x-app-title>
 
         <div class="d-block d-lg-none menu-collapse cursor-pointer position-relative" onclick="openMobileMenu()">
             <div class="mc-wrap">
@@ -15,18 +15,18 @@
         </div>
 
         @if (in_array('admin', user_roles()) && $checkListCompleted < $checkListTotal && App::environment('codecanyon'))
-            <!-- <div class="ml-3 d-none d-lg-block d-md-block">
-                <span class="f-12 mb-1"><a href="{{ route('checklist') }}" class="text-lightest ">
-                        @lang('modules.accountSettings.setupProgress')</a>
-                    <span class="float-right">{{ $checkListCompleted }}/{{ $checkListTotal }}</span>
-                </span>
-                <div class="progress" style="height: 5px; width: 150px">
-                    <div class="progress-bar bg-primary" role="progressbar"
-                         style="width: {{ ($checkListCompleted / $checkListTotal) * 100 }}%;" aria-valuenow="25"
-                         aria-valuemin="0" aria-valuemax="100">&nbsp;
-                    </div>
-                </div>
-            </div> -->
+            <!--<div class="ml-3 d-none d-lg-block d-md-block">-->
+            <!--    <span class="f-12 mb-1"><a href="{{ route('checklist') }}" class="text-lightest ">-->
+            <!--            @lang('modules.accountSettings.setupProgress')</a>-->
+            <!--        <span class="float-right">{{ $checkListCompleted }}/{{ $checkListTotal }}</span>-->
+            <!--    </span>-->
+            <!--    <div class="progress" style="height: 5px; width: 150px">-->
+            <!--        <div class="progress-bar bg-primary" role="progressbar"-->
+            <!--             style="width: {{ ($checkListCompleted / $checkListTotal) * 100 }}%;" aria-valuenow="25"-->
+            <!--             aria-valuemin="0" aria-valuemax="100">&nbsp;-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
         @endif
 
     </div>

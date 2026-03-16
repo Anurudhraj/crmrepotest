@@ -74,7 +74,7 @@ $projectArchived = $project->trashed();
 
                             @if ($viewGanttPermission == 'all' || ($viewGanttPermission == 'added' && user()->id == $project->added_by) || ($viewGanttPermission == 'owned' && user()->id == $project->client_id))
                                 <li>
-                                    <x-tab :href="route('projects.show', $project->id).'?tab=gantt'" ajax="false" :text="__('modules.projects.viewGanttChart')" class="gantt" />
+                                    <x-tab :href="route('projects.show', $project->id).'?tab=gantt'" :text="__('modules.projects.viewGanttChart')" class="gantt" />
                                 </li>
                             @endif
                         @endif

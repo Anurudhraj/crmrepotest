@@ -1,4 +1,4 @@
-<div class="chartHeading mt-3 bg-white  d-flex justify-content-between p-20 rounded-top">
+<div class="chartHeading mt-3 bg-white text-capitalize d-flex justify-content-between p-20 rounded-top">
     <h3 class="f-21 f-w-500 mb-0">@lang('modules.department.dragAndDrop')</h3>
 </div>
 

@@ -8,7 +8,7 @@
             <div class="col-sm-12 bg-grey p-4 signature">
                 <x-forms.label fieldId="sign-pad" fieldRequired="true" :fieldLabel="__('modules.estimates.signature')" />
                 <div class="signature_wrap wrapper border-0 form-control">
-                    <canvas id="sign-pad" class="signature-pad rounded" width=750 height=150></canvas>
+                    <canvas id="sign-pad" class="signature-pad rounded" width=400 height=150></canvas>
                 </div>
             </div>
             <div class="col-sm-12 p-4 d-none upload-img">
@@ -32,10 +32,8 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        $(".dropify").dropify({
-            messages: dropifyMessages
-        });
+    $(window).on('load', function() {
+        $('.dropify').dropify();
     });
 
 

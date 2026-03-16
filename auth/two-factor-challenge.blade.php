@@ -5,7 +5,7 @@
         action="{{ Session::get('login.authenticate_via') == 'email' ? route('check_code') : route('two-factor.login') }}"
         class="ajax-form" method="POST">
         @csrf
-        <h3 class=" mb-5 f-w-500">
+        <h3 class="text-capitalize mb-5 f-w-500">
             <i class="fa fa-lock mr-3"></i>@lang('app.twoFactorVerification')
         </h3>
 
@@ -62,7 +62,6 @@
         <div class="forgot_pswd mt-3">
             <a href="{{ route('login') }}" class="justify-content-center">@lang('app.login')</a>
         </div>
-        <input type="hidden" name="locale" value="{{ session()->has('locale') ? session('locale') : global_setting()->locale }}">
     </form>
 
     <x-slot name="scripts">

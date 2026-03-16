@@ -8,7 +8,7 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
     <div class="row">
         <div class="col-sm-12">
             <div class="card bg-white border-0 b-shadow-4">
-                <div class="card-header bg-white  border-bottom-grey  justify-content-between p-20">
+                <div class="card-header bg-white  border-bottom-grey text-capitalize justify-content-between p-20">
                     <div class="row">
                         <div class="col-md-10 col-10">
                             <h3 class="heading-h1">@lang('app.leavesDetails')</h3>
@@ -101,7 +101,7 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
                     @endphp
 
                     <div class="col-12 px-0 pb-3 d-lg-flex d-md-flex d-block">
-                        <p class="mb-0 text-lightest f-14 w-30 d-inline-block ">
+                        <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                             @lang('modules.leaves.applicantName')</p>
                         <p class="mb-0 text-dark-grey f-14">
                             <x-employee :user="$leave->user" />
@@ -112,23 +112,12 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
                         html="true" />
 
                     <x-cards.data-row :label="__('modules.leaves.leaveType')" :value="$leaveType" html="true" />
-
-                    @php
-                        if ($leave->paid == 1) {
-                            $leavePaidStatus = '<span class="badge badge-success">' . __('app.paid') . '</span>';
-
-                        } else {
-                            $leavePaidStatus = '<span class="badge badge-danger">' . __('app.unpaid') . '</span>';
-
-                        }
-                    @endphp
-
-                    <x-cards.data-row :label="__('app.paid')" :value="$leavePaidStatus" html="true" />
+                    <x-cards.data-row :label="__('app.paid')" :value="$leave->type->paid == 1 ? __('app.yes') : __('app.no')" />
 
                     @if ($leave->duration == 'half day')
 
                         <div class="col-12 px-0 pb-3 d-lg-flex d-md-flex d-block">
-                            <p class="mb-0 text-lightest f-14 w-30 d-inline-block ">
+                            <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                                 @lang('app.duration')</p>
                             <p class="mb-0 text-dark-grey f-14">
                                 @lang('modules.leaves.halfDay')
@@ -151,7 +140,7 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
 
                     @if (!is_null($leave->approved_by))
                         <div class="col-12 px-0 pb-3 d-lg-flex d-md-flex d-block">
-                            <p class="mb-0 text-lightest f-14 w-30 d-inline-block ">
+                            <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                                 @lang('modules.leaves.approvedBy')</p>
                             <p class="mb-0 text-dark-grey f-14">
                                 <x-employee :user="$leave->approvedBy" />
@@ -173,28 +162,30 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
                             html="true" />
                     @endif
                     <div class="col-12 px-0 pb-3 d-lg-flex d-md-flex d-block">
-                        <p class="mb-0 text-lightest f-14 w-30 d-inline-block ">
+                        <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                             @lang('app.file')</p>
                         <p class="mb-0 text-dark-grey f-14">
                             <div div class="d-flex flex-wrap mt-3" id="leave-file-list">
                                 @forelse($leave->files as $file)
                                     <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
-                                            <x-file-view-thumbnail :file="$file"></x-file-view-thumbnail>
-
+                                        @if ($file->icon == 'images')
+                                            <img src="{{ $file->file_url }}">
+                                        @else
+                                            <i class="fa {{ $file->icon }} text-lightest"></i>
+                                        @endif
                                             <x-slot name="action">
                                                 <div class="dropdown ml-auto file-action">
-                                                    <button class="btn btn-lg f-14 p-0 text-lightest  rounded  dropdown-toggle"
+                                                    <button class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
                                                         type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-ellipsis-h"></i>
                                                     </button>
 
                                                     <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
                                                         aria-labelledby="dropdownMenuLink" tabindex="0">
-                                                        @if ($file->icon == 'images')
-                                                            <a class="img-lightbox cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" data-image-url="{{ $file->file_url }}" href="javascript:;">@lang('app.view')</a>
-                                                        @else
-                                                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 " target="_blank" href="{{ $file->file_url }}">@lang('app.view')</a>
-                                                        @endif
+                                                            @if ($file->icon = 'images')
+                                                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 " target="_blank"
+                                                                    href="{{ $file->file_url }}">@lang('app.view')</a>
+                                                            @endif
                                                             <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
                                                                 href="{{ route('leave-files.download', md5($file->id)) }}">@lang('app.download')</a>
 

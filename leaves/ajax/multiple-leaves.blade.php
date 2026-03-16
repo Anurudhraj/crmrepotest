@@ -7,7 +7,7 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
 <div class="row">
     <div class="col-sm-12">
         <div class="card bg-white border-0 b-shadow-4">
-            <div class="card-header bg-white  border-bottom-grey  justify-content-between p-20">
+            <div class="card-header bg-white  border-bottom-grey text-capitalize justify-content-between p-20">
                 <div class="row">
                     <div class="col-lg-8 col-xs-4">
                         <h3 class="heading-h1 mb-3">@lang('app.multipleDetails')</h3>
@@ -38,23 +38,6 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
                 </div>
             </div>
             <div class="card-body">
-
-                <div class="px-4"></div>
-                    <div class="col-12 px-0 pb-3 d-lg-flex d-md-flex d-block">
-                        <p class="mb-0 text-lightest f-14 w-30 d-inline-block ">
-                            @lang('modules.leaves.applicantName')</p>
-                        <p class="mb-0 text-dark-grey f-14">
-                            <x-employee :user="$leave->user" />
-                        </p>
-                    </div>
-
-                    <x-cards.data-row :label="__('modules.leaves.reason')" :value="$leave->reason" html="true" />
-
-                    @if (!is_null($leave->manager_status_permission))
-                        <x-cards.data-row :label="__('modules.leaves.statusReport')" :value="$leave->manager_status_permission==='pre-approve' ? __('modules.leaves.preApproved') : ''" html="true" />
-                    @endif
-                </div>
-
                 @include('leaves.multiple-leave-table')
             </div>
         </div>

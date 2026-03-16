@@ -1,7 +1,7 @@
 <x-auth>
     <form id="login-form" action="{{ route('login') }}" class="ajax-form" method="POST">
         {{ csrf_field() }}
-        <h3 class=" mb-4 f-w-500">@lang('app.signUpAsClient')</h3>
+        <h3 class="text-capitalize mb-4 f-w-500">@lang('app.signUpAsClient')</h3>
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -77,7 +77,6 @@
            class="btn-secondary f-w-500 rounded w-100 height-50 f-15 mt-3">
             @lang('app.login')
         </a>
-        <input type="hidden" name="locale" value="{{ session()->has('locale') ? session('locale') : global_setting()->locale }}">
     </form>
 
     <x-slot name="scripts">

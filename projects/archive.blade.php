@@ -79,7 +79,7 @@
         <!-- MORE FILTERS START -->
         <x-filters.more-filter-box>
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 "
+                <label class="f-14 text-dark-grey mb-12 text-capitalize"
                     for="usr">@lang('modules.projects.projectCategory')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
@@ -97,7 +97,7 @@
 
             @if (!in_array('client', user_roles()))
                 <div class="more-filter-items">
-                    <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.projectMember')</label>
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.projectMember')</label>
                     <div class="select-filter mb-4">
                         <div class="select-others">
                             <select class="form-control select-picker" name="employee_id" id="employee_id"
@@ -113,7 +113,7 @@
             @endif
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.department')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.department')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="team_id" id="team_id" data-live-search="true" data-container="body" data-size="8">

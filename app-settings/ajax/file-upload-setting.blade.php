@@ -63,7 +63,7 @@
             <small>{{__('messages.lowerValue')}} {{\App\Helper\Files::getUploadMaxFilesize()['size']}}</small>
 
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <label for="allow_max_no_of_files" class="mt-3">
                 @lang('modules.accountSettings.maxNumberOfFiles') <sup class="f-14">*</sup>
             </label>

@@ -3,7 +3,7 @@
 
 @lang('email.reminder.subject')
 
-## @lang('app.taskDetails')
+<h5>@lang('app.taskDetails')</h5>
 
 @component('mail::text', ['text' => $content])
 

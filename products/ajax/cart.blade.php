@@ -22,7 +22,7 @@
     <!-- HEADING START -->
     <div class="d-block d-lg-flex d-md-flex justify-content-between action-bar">
         <div class="px-lg-4 px-md-4 px-3 py-3">
-            <h4 class="mb-0 f-21 font-weight-normal "><i class="bi bi-cart3"></i> @lang('app.cart')</h4>
+            <h4 class="mb-0 f-21 font-weight-normal text-capitalize"><i class="bi bi-cart3"></i> @lang('app.cart')</h4>
         </div>
 
         <div class="px-lg-4 px-md-4 px-3 py-3 cart_empty">
@@ -212,7 +212,7 @@
 
             <!-- TOTAL, DISCOUNT START -->
             <div class="d-flex px-lg-4 px-md-4 px-3 pb-3 c-inv-total">
-                <table width="100%" class="text-right f-14 ">
+                <table width="100%" class="text-right f-14 text-capitalize">
                     <tbody>
                         <tr>
                             <td width="50%" class="border-0 d-lg-table d-md-table d-none"></td>
@@ -255,7 +255,7 @@
             <!-- NOTE AND TERMS AND CONDITIONS START -->
             <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
                 <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
-                    <label class="f-14 text-dark-grey mb-12  w-100"
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                         for="usr">@lang('app.clientNote')</label>
                     <textarea class="form-control" name="note" id="note" rows="4"></textarea>
                 </div>

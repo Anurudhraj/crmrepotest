@@ -67,7 +67,7 @@
         <!-- MORE FILTERS START -->
         <x-filters.more-filter-box>
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.department')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.department')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="department" data-container="body"
@@ -82,7 +82,7 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 "
+                <label class="f-14 text-dark-grey mb-12 text-capitalize"
                        for="usr">@lang('modules.employees.role')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
@@ -97,20 +97,22 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.status')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.status')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="status" id="status" data-container="body">
                             <option value="all">@lang('app.all')</option>
                             <option selected value="active">@lang('app.active')</option>
                             <option value="deactive">@lang('app.inactive')</option>
+                            <option {{ request('status') == 'ex_employee' ? 'selected' : '' }} value="ex_employee">
+                                @lang('modules.employees.exEmployee')</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('modules.employees.gender')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('modules.employees.gender')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="gender" id="gender" data-container="body">
@@ -118,23 +120,6 @@
                             <option value="male">@lang('app.male')</option>
                             <option value="female">@lang('app.female')</option>
                             <option value="others">@lang('app.others')</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('modules.employees.employmentType')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" name="employmentType" id="employmentType" data-container="body">
-                            <option value="all">@lang('app.all')</option>
-                            <option value="probation">@lang('app.onProbation')</option>
-                            <option value="internship">@lang('app.onInternship')</option>
-                            <option value="notice_period">@lang('app.onNoticePeriod')</option>
-                            <option value="new_hires">@lang('app.newHires')</option>
-                            <option value="long_standing">@lang('app.longStanding')</option>
-
                         </select>
                     </div>
                 </div>
@@ -235,7 +220,6 @@
             const skill = $('#skill').val();
             const designation = $('#designation').val();
             const department = $('#department').val();
-            const employmentType = $('#employmentType').val();
             const searchText = $('#search-text-field').val();
             data['status'] = status;
             data['employee'] = employee;
@@ -244,7 +228,6 @@
             data['skill'] = skill;
             data['designation'] = designation;
             data['department'] = department;
-            data['employmentType'] = employmentType;
             data['searchText'] = searchText;
 
             /* If any of these following filters are applied, then dashboard conditions will not work  */
@@ -261,7 +244,7 @@
             window.LaravelDataTables["employees-table"].draw(false);
         }
 
-        $('#employee, #status, #role, #gender, #skill, #designation, #department, #employmentType').on('change keyup',
+        $('#employee, #status, #role, #gender, #skill, #designation, #department').on('change keyup',
             function () {
                 if ($('#status').val() != "all") {
                     $('#reset-filters').removeClass('d-none');
@@ -274,8 +257,6 @@
                 } else if ($('#designation').val() != "all") {
                     $('#reset-filters').removeClass('d-none');
                 } else if ($('#department').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                }else if ($('#employmentType').val() != "all") {
                     $('#reset-filters').removeClass('d-none');
                 } else {
                     $('#reset-filters').addClass('d-none');

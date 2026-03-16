@@ -13,7 +13,7 @@
         <x-form id="save-ticket-data-form">
             <input type="hidden" id="replyID">
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('modules.tickets.ticketDetail')</h4>
                 <div class="row p-20">
                     @if (!in_array('client', user_roles()))
@@ -47,7 +47,7 @@
                                                    :fieldLabel="__('modules.tickets.requesterName')"/>
                                     <input type="hidden" name="requester_type" id="requester_type" value="client">
                                     <input type="hidden" name="client_id" id="client_id" value="{{ $client->id }}">
-                                    <input type="text" value="{{ $client->name_salutation }}"
+                                    <input type="text" value="{{ $client->name }}"
                                            class="form-control height-35 f-15 readonly-background" readonly>
                                 @else
                                     <x-forms.select fieldId="client_id"
@@ -154,28 +154,6 @@
                             <option value="">--</option>
                         </x-forms.select>
                     </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <x-forms.label class="my-3" fieldId="ticket_type_id" :fieldLabel="__('modules.invoices.type')">
-                        </x-forms.label>
-                        <x-forms.input-group>
-                            <select class="form-control select-picker" name="type_id" id="ticket_type_id"
-                                    data-live-search="true" data-size="8">
-                                <option value="">--</option>
-                                @foreach ($types as $type)
-                                    <option value="{{ $type->id }}">{{ $type->type }}</option>
-                                @endforeach
-                            </select>
-                            @if ($manageTypePermission == 'all')
-                                <x-slot name="append">
-                                    <button id="add-type" type="button"
-                                            class="btn btn-outline-secondary border-grey"
-                                            data-toggle="tooltip" data-original-title="{{ __('app.addNew').' '.__('modules.tickets.ticketType') }}">@lang('app.add')</button>
-                                </x-slot>
-                            @endif
-                        </x-forms.input-group>
-                    </div>
-
                     <div class="col-md-12">
                         <x-forms.text :fieldLabel="__('modules.tickets.ticketSubject')" fieldName="subject"
                                       fieldRequired="true" fieldId="subject"/>
@@ -207,7 +185,7 @@
 
                 </div>
 
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-top-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
                     <a href="javascript:;" class="text-dark toggle-other-details"><i class="fa fa-chevron-down"></i>
                         @lang('modules.client.clientOtherDetails')</a>
                 </h4>
@@ -226,6 +204,27 @@
                             <option data-content="<i class='fa fa-circle mr-2 text-red'></i> {{ __('app.urgent')}}"
                                 value="urgent">@lang('app.urgent')</option>
                         </x-forms.select>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <x-forms.label class="my-3" fieldId="ticket_type_id" :fieldLabel="__('modules.invoices.type')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="type_id" id="ticket_type_id"
+                                    data-live-search="true" data-size="8">
+                                <option value="">--</option>
+                                @foreach ($types as $type)
+                                    <option value="{{ $type->id }}">{{ $type->type }}</option>
+                                @endforeach
+                            </select>
+                            @if ($manageTypePermission == 'all')
+                                <x-slot name="append">
+                                    <button id="add-type" type="button"
+                                            class="btn btn-outline-secondary border-grey"
+                                            data-toggle="tooltip" data-original-title="{{ __('app.addNew').' '.__('modules.tickets.ticketType') }}">@lang('app.add')</button>
+                                </x-slot>
+                            @endif
+                        </x-forms.input-group>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
@@ -285,11 +284,9 @@
 
         getAgents($('#ticket_group').val());
 
-        function getAgents(groupId, exceptThis = null){
-            var url = "{{ route('tickets.agent_group', [':id', ':exceptThis'])}}";
+        function getAgents(groupId){
+            var url = "{{ route('tickets.agent_group', ':id')}}";
             url = url.replace(':id', groupId);
-            url = url.replace(':exceptThis', exceptThis);
-
             $.easyAjax({
                 url: url,
                 type: "GET",
@@ -322,12 +319,6 @@
         $('#ticket_group').change(function(){
             var id = $(this).val();
             getAgents(id)
-        })
-
-        $('#user_id').change(function(){
-            let id = $('#ticket_group').val();
-            let requesterName =  $('#user_id').val();
-            getAgents(id, requesterName)
         })
 
         //Dropzone class

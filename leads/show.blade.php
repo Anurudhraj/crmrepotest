@@ -8,7 +8,6 @@
 $viewClientNote = user()->permission('view_deal_note');
 $viewProposalPermission = user()->permission('view_lead_proposals');
 $viewLeadFilePermission = user()->permission('view_lead_files');
-$viewLeadFollowupPermission = user()->permission('view_lead_follow_up');
 
 @endphp
 
@@ -23,11 +22,10 @@ $viewLeadFollowupPermission = user()->permission('view_lead_follow_up');
             <a class="d-none close-it" href="javascript:;" id="close-client-detail" >
                 <i class="fa fa-times"></i>
             </a>
-            <x-tab :href="route('deals.show', $deal->id)" :text="__('modules.projects.overview')" class="profile" />
+            <x-tab :href="route('deals.show', $deal->id)" :text="__('modules.lead.profile')" class="profile" />
+
+            <x-tab :href="route('deals.show', $deal->id).'?tab=files'" :text="__('modules.lead.file')" class="files" ajax="false"/>
             @if($viewLeadFilePermission != 'none')
-                <x-tab :href="route('deals.show', $deal->id).'?tab=files'" :text="__('modules.lead.file')" class="files" ajax="false"/>
-            @endif
-            @if($viewLeadFollowupPermission != 'none')
                 <x-tab :href="route('deals.show', $deal->id).'?tab=follow-up'" :text="__('modules.lead.followUp')" class="follow-up" ajax="false" />
             @endif
             @if($viewProposalPermission != 'none')
@@ -40,8 +38,6 @@ $viewLeadFollowupPermission = user()->permission('view_lead_follow_up');
             @if ($gdpr->enable_gdpr)
                 <x-tab :href="route('deals.show', $deal->id).'?tab=gdpr'" :text="__('app.menu.gdpr')" class="gdpr" ajax="false" />
             @endif
-
-            <x-tab :href="route('deals.show', $deal->id).'?tab=history'" :text="__('modules.tasks.history')" class="history" ajax="false" />
         </div>
         <a class="mb-0 d-block d-lg-none text-dark-grey ml-auto mr-2 border-left-grey"
             onclick="openClientDetailSidebar()"><i class="fa fa-ellipsis-v "></i></a>

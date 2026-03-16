@@ -1,3 +1,6 @@
+@php
+$deletePipelinePermission = user()->permission('delete_deal_pipeline');
+@endphp
 <link rel="stylesheet" href="{{ asset('vendor/css/bootstrap-colorpicker.css') }}" />
 
 <style>
@@ -50,18 +53,20 @@
     <div class="modal-footer">
 
         <x-forms.button-cancel data-dismiss="modal" class="border-0 mr-3">@lang('app.close')</x-forms.button-cancel>
-        @if(!$pipeline->default)
+        @if(!$pipeline->default && ($deletePipelinePermission == 'all'
+        || ($deletePipelinePermission == 'added' && user()->id == $pipeline->added_by)
+        || ($deletePipelinePermission == 'owned' && user()->id == $pipeline->added_by)
+        || ($deletePipelinePermission == 'both' && user()->id == $pipeline->added_by)))
             <button type="button" class="btn-danger rounded f-14 p-2 delete-pipeline">
                     <i class="fa fa-trash mr-3"></i>
                     @lang('app.delete')
             </button>
         @endif
-
-
         <x-forms.button-primary id="save-status" icon="check">@lang('app.save')</x-forms.button-primary>
-
     </div>
 </x-form>
+
+<script src="{{ asset('vendor/jquery/bootstrap-colorpicker.js') }}"></script>
 
 <script>
 

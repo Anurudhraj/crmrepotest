@@ -80,32 +80,6 @@ $addProjectPermission = user()->permission('add_projects');
         }
     });
 
-    $('#projects-table').on('change', '.change-status', function() {
-            var url = "{{ route('projects.change_status') }}";
-            var token = "{{ csrf_token() }}";
-            var id = $(this).data('project-id');
-            var status = $(this).val();
-
-            if (id != "" && status != "") {
-                $.easyAjax({
-                    url: url,
-                    type: "POST",
-                    container: '.content-wrapper',
-                    blockUI: true,
-                    data: {
-                        '_token': token,
-                        projectId: id,
-                        statusId: status,
-                        sortBy: 'id'
-                    },
-                    success: function(data) {
-                        window.LaravelDataTables["projects-table"].draw(false);
-                    }
-                });
-
-            }
-        });
-
     $('#quick-action-apply').click(function() {
         const actionValue = $('#quick-action-type').val();
         if (actionValue == 'delete') {

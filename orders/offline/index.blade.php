@@ -9,13 +9,6 @@
     <div class="portlet-body">
         <x-form id="offline-payment" method="POST" class="ajax-form">
             <input type="hidden" name="orderID" value="{{$orderID}}">
-
-            <div class="d-flex justify-content-between">
-                <div class="pt-2">
-                    <i class="fa fa-exclamation-triangle"></i> @lang('messages.requestSentOffline')
-                </div>
-            </div>
-
             <div class="form-body">
                 <div class="row" id="addressDetail">
                     <div class="col-lg-12 col-md-12">
@@ -65,12 +58,7 @@
             file: true,
             disableButton: true,
             buttonSelector: '#save-offline-payment',
-            data: $('#offline-payment').serialize(),
-            success: function(response) {
-                if (response.status === 'success') {
-                    window.location.href = response.redirectUrl;
-                }
-            }
+            data: $('#offline-payment').serialize()
         })
     })
 </script>

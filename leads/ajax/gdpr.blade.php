@@ -28,7 +28,7 @@
                 <ul>
                     @forelse($consents as $consent)
                     <li>
-                        <a class="d-block f-15 text-dark-grey  border-bottom-grey consent-details" href="javascript:;" data-consent-id="{{ $consent->id }}">{{ $consent->name }}</a>
+                        <a class="d-block f-15 text-dark-grey text-capitalize border-bottom-grey consent-details" href="javascript:;" data-consent-id="{{ $consent->id }}">{{ $consent->name }}</a>
                     </li>
                     @empty
                     <p class="text-center">No Consent available.</p>

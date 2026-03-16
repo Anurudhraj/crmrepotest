@@ -536,7 +536,6 @@
 
         .word-break {
             word-wrap: break-word;
-            word-break: break-all;
         }
 
         .left-stripes {
@@ -661,7 +660,7 @@
                             <div class="description">@lang('modules.invoices.billedTo'):</div>
                             @if ($invoice->project->client->name && $invoiceSetting->show_client_name == 'yes')
                                 <div class="client-name">
-                                    <strong>{{ $invoice->project->client->name_salutation }}</strong>
+                                    <strong>{{ $invoice->project->client->name }}</strong>
                                 </div>
                             @endif
 
@@ -673,7 +672,7 @@
 
                             @if ($invoice->project->client->mobile && $invoiceSetting->show_client_phone == 'yes')
                                 <div>
-                                    <span class="">{{ $invoice->project->client->mobile_with_phonecode }}</span>
+                                    <span class="">{{ $invoice->project->client->mobile }}</span>
                                 </div>
                             @endif
                             @if ($invoice->project->client->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -714,7 +713,7 @@
                         <section id="client-info" class="description">
                             <span class="description">@lang('modules.invoices.billedTo'): </span>
                             <div class="client-name">
-                                {{ $invoice->client->name_salutation }}
+                                {{ $invoice->client->name }}
                             </div>
 
                             @if ($invoice->clientDetails)
@@ -758,7 +757,7 @@
                         <section id="client-info">
                             <span>@lang('modules.invoices.billedTo'):</span>
                             <div class="client-name">
-                                <strong>{{ $invoice->estimate->client->name_salutation }}</strong>
+                                <strong>{{ $invoice->estimate->client->name }}</strong>
                             </div>
 
                             <div>
@@ -860,15 +859,15 @@
                     </tr>
 
                     <?php $count = 0; ?>
-                    @foreach ($invoice->items->sortBy('field_order') as $item)
+                    @foreach ($invoice->items as $item)
                         @if ($item->type == 'item')
                             <tr data-iterate="item">
                                 <td>{{ ++$count }}</td>
                                 <!-- Don't remove this column as it's needed for the row commands -->
-                                <td class="word-break">
+                                <td>
                                     {{ $item->item_name }}
                                     @if (!is_null($item->item_summary))
-                                        <p class="item-summary mb-3 word-break">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
+                                        <p class="item-summary mb-3">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
                                     @endif
                                     @if ($item->invoiceItemImage)
                                         <p>
@@ -937,33 +936,14 @@
                     @if ($invoiceSetting->authorised_signatory && $invoiceSetting->authorised_signatory_signature && $invoice->status == 'paid')
                     <tr>
                         <td id="signatory" colspan="2" style="font-size:15px" align="right">
-                            <img src="{{ $invoiceSetting->authorised_signatory_signature_url }}" alt="{{ $company->company_name }}"/><br><br>
-                            <p style="margin-top: 35px;">@lang('modules.invoiceSettings.authorisedSignatory')</p>
+                            <img src="{{ $invoiceSetting->authorised_signatory_signature_url }}" alt="{{ $company->company_name }}"/><br>
+                            @lang('modules.invoiceSettings.authorisedSignatory')
                         </td>
                     </tr>
                     @endif
                 </table>
 
             </section>
-
-            @if($invoice->invoicePaymentDetail)
-                <table class="description mt-4" style="width:50%; border-collapse: collapse; border: 1px solid #FFFFFF; margin-top:80px;" cellspacing="0" cellpadding="0">
-                    <thead>
-                        <tr style="border-bottom: 1px solid #e7e9eb; background: #b0b4b3; color: white; font-size: 0.9em;">
-                            <th class="description" style="text-align: left; padding: 10px; border: 1px solid #e7e9eb;">@lang('modules.invoices.paymentDetails')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="page-break-inside: avoid;">
-                            <td class="description" style="padding: 10px; color:#555555; border: 1px solid #e7e9eb; font-size: 0.8em;">
-                                <strong>{{ $invoice->invoicePaymentDetail->title }}</strong><br>
-                                    {!! !empty($invoice->invoicePaymentDetail->payment_details)
-                                    ? nl2br(e($invoice->invoicePaymentDetail->payment_details)) : '--' !!}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            @endif
 
 
             <div class="clearfix"></div>

@@ -100,7 +100,7 @@ $editTaskPermission = ($project->project_admin == user()->id) ? 'all' : user()->
             </div>
 
 
-            <svg id="gantt"></svg>
+            <div id="gantt"></div>
 
         </div>
         <!-- Task Box End -->

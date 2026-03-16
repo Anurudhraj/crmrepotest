@@ -383,6 +383,7 @@
                         $('#chatBox').attr("data-chat-for-user", id);
 
                         $('#sendMessageForm').removeClass('d-none');
+                        scrollChat();
                         $('#msgContentRight').addClass('d-block');
 
                         if (totalUnreadMessagesCount > 0 && isUnreadMessage && response.unreadMessages == 0) {
@@ -395,8 +396,6 @@
 
                             totalUnreadMessagesCount = remainingUnreadMessages;
                         }
-
-                        scrollChat();
                     }
                 }
             });

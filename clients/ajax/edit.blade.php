@@ -7,7 +7,7 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
     <div class="col-sm-12">
         <x-form id="save-data-form" method="PUT">
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('modules.employees.accountDetails')</h4>
 
                 <div class="row p-20">
@@ -61,9 +61,9 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
                                 search="true">
                                 <option value="">--</option>
                                 @foreach ($countries as $item)
-                                    <option @selected($client->country_id == $item->id) data-mobile="{{ $client->mobile }}" data-tokens="{{ $item->iso3 }}" data-phonecode="{{ $item->phonecode }}" data-content="<span
+                                    <option @if ($client->country_id == $item->id) selected @endif data-mobile="{{ $client->mobile }}" data-tokens="{{ $item->iso3 }}" data-phonecode="{{ $item->phonecode }}" data-content="<span
                                         class='flag-icon flag-icon-{{ strtolower($item->iso) }} flag-icon-squared'></span>
-                                        {{ $item->nicename }}" data-iso="{{ $item->iso }}" value="{{ $item->id }}">{{ $item->nicename }}</option>
+                                        {{ $item->nicename }}" value="{{ $item->id }}">{{ $item->nicename }}</option>
                                 @endforeach
                             </x-forms.select>
                         </div>
@@ -74,10 +74,10 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
                                 <x-forms.select fieldId="country_phonecode" fieldName="country_phonecode"
                                     search="true">
                                     @foreach ($countries as $item)
-                                        <option @selected($client->country_phonecode == $item->phonecode && !is_null($item->numcode))
-                                                data-tokens="{{ $item->name }}" data-country-iso="{{ $item->iso }}"
+                                        <option @selected($client->country_phonecode == $item->phonecode)
+                                                data-tokens="{{ $item->name }}"
                                                 data-content="{{$item->flagSpanCountryCode()}}"
-                                                value="{{ $item->phonecode }}">
+                                                value="{{ $item->phonecode }}">{{ $item->phonecode }}
                                         </option>
                                     @endforeach
                                 </x-forms.select>
@@ -110,7 +110,7 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
                         <x-forms.select fieldId="locale" :fieldLabel="__('modules.accountSettings.changeLanguage')"
                             fieldName="locale" search="true">
                             @foreach ($languages as $language)
-                                <option @selected($client->locale == $language->language_code)
+                                <option @if ($client->locale == $language->language_code) selected @endif
                                 data-content="<span class='flag-icon flag-icon-{{ ($language->flag_code == 'en') ? 'gb' : $language->flag_code }} flag-icon-squared'></span> {{ $language->language_name }}"
                                 value="{{ $language->language_code }}">{{ $language->language_name }}</option>
                             @endforeach
@@ -126,7 +126,7 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
                                 data-live-search="true">
                                 <option value="">--</option>
                                 @foreach($categories as $category)
-                                    <option @selected($client->clientDetails->category_id == $category->id) value="{{ $category->id }}">
+                                    <option @if ($client->clientDetails->category_id == $category->id) selected @endif value="{{ $category->id }}">
                                         {{ $category->category_name }}</option>
                                 @endforeach
                             </select>
@@ -147,9 +147,8 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="sub_category_id" id="sub_category_id"
                                 data-live-search="true">
-                                <option value="">--</option>
                                 @forelse($subcategories as $subcategory)
-                                    <option  @selected($client->clientDetails->sub_category_id == $subcategory->id) value="{{ $subcategory->id }}">
+                                    <option @if ($client->clientDetails->sub_category_id == $subcategory->id) selected @endif value="{{ $subcategory->id }}">
                                         {{ $subcategory->category_name }}</option>
                                 @empty
                                     <option value="">@lang('messages.noCategoryAdded')</option>
@@ -213,7 +212,7 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
 
                 </div>
 
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-top-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
                     @lang('modules.client.companyDetails')</h4>
                 <div class="row p-20">
                     <div class="col-lg-3 col-md-6">
@@ -306,9 +305,7 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
                                 fieldName="added_by">
                                 <option value="">--</option>
                                 @foreach ($employees as $item)
-                                    @if($item->status == 'active' || $client->clientDetails->added_by == $item->id)
-                                        <x-user-option :user="$item" :selected="$client->clientDetails->added_by == $item->id" />
-                                    @endif
+                                    <x-user-option :user="$item" :selected="$client->clientDetails->added_by == $item->id" />
                                 @endforeach
                             </x-forms.select>
                         </div>
@@ -373,34 +370,15 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
             });
         });
 
-        function updatePhoneCode() {
-            var selectedCountry = $('#country').find(':selected');
-            var phonecode = selectedCountry.data('phonecode');
-            var iso = selectedCountry.data('iso');
-
-            $('#country_phonecode').find('option').each(function() {
-                if ($(this).data('country-iso') === iso) {
-                    $(this).val(phonecode);
-                    $(this).prop('selected', true); // Set the option as selected
-                }
-            });
-        }
-        updatePhoneCode();
-
         $('#country').change(function(){
-            updatePhoneCode();
+            var phonecode = $(this).find(':selected').data('phonecode');
+            $('#country_phonecode').val(phonecode);
             $('.select-picker').selectpicker('refresh');
         });
 
+        $('#category_id').change(function(e) {
 
-        // Function to load subcategories based on selected category
-        function loadSubCategories(categoryId, selectedSubCategoryId = null) {
-
-            if (categoryId === '') {
-                $('#sub_category_id').html('<option value="">--</option>');
-                $('#sub_category_id').selectpicker('refresh');
-                return; // Stop further execution if no category is selected
-            }
+            let categoryId = $(this).val();
 
             var url = "{{ route('get_client_sub_categories', ':id') }}";
             url = url.replace(':id', categoryId);
@@ -411,32 +389,23 @@ $addClientSubCategoryPermission = user()->permission('manage_client_subcategory'
                 success: function(response) {
                     if (response.status == 'success') {
                         var options = [];
-                        var rData = response.data;
-
+                        var rData = [];
+                        rData = response.data;
                         $.each(rData, function(index, value) {
-                            var isSelected = selectedSubCategoryId && selectedSubCategoryId == value.id ? 'selected' : '';
-                            var selectData = '<option value="' + value.id + '" ' + isSelected + '>' + value.category_name + '</option>';
+                            var selectData = '';
+                            selectData = '<option value="' + value.id + '">' + value
+                                .category_name + '</option>';
                             options.push(selectData);
                         });
 
-                        $('#sub_category_id').html('<option value="">--</option>' + options);
+                        $('#sub_category_id').html('<option value="">--</option>' +
+                            options);
                         $('#sub_category_id').selectpicker('refresh');
                     }
                 }
-            });
-        }
+            })
 
-        // On change of category, fetch subcategories
-        $('#category_id').change(function() {
-            var categoryId = $(this).val();
-            loadSubCategories(categoryId);
         });
-
-        // Pre-load subcategories in the edit form
-        var selectedCategoryId = "{{ $client->clientDetails->category_id }}";
-        var selectedSubCategoryId = "{{ $client->clientDetails->sub_category_id }}";
-
-        loadSubCategories(selectedCategoryId, selectedSubCategoryId);
 
 
         $('#save-form').click(function() {

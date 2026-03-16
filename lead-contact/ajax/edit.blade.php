@@ -12,7 +12,7 @@ $addProductPermission = user()->permission('add_product');
     <div class="col-sm-12">
         <x-form id="save-lead-data-form" method="PUT">
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('modules.leadContact.leadDetails')</h4>
 
                 <div class="row p-20">
@@ -64,18 +64,35 @@ $addProductPermission = user()->permission('add_product');
                         </div>
                     @endif
 
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.select fieldId="lead_owner" :fieldLabel="__('app.owner')" fieldName="lead_owner">
-                            <option value="">--</option>
-                            @foreach ($employees as $item)
-                                <x-user-option :user="$item" :selected="($leadContact->lead_owner == $item->id)" />
-                            @endforeach
-                        </x-forms.select>
-                    </div>
+                    @if ($viewLeadCategoryPermission != 'none')
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.label class="my-3" fieldId="category_id" :fieldLabel="__('modules.lead.leadCategory')">
+                            </x-forms.label>
+                            <x-forms.input-group>
+                                <select class="form-control select-picker" name="category_id" id="category_id"
+                                    data-live-search="true">
+                                    <option value="">--</option>
+                                    @forelse($categories as $category)
+                                        <option value="{{ $category->id }}" @if ($leadContact->category_id == $category->id) selected @endif>{{ $category->category_name }}</option>
+                                    @empty
+                                        <option value="">@lang('messages.noCategoryAdded')</option>
+                                    @endforelse
+                                </select>
+
+                                @if ($addLeadCategoryPermission == 'all' || $addLeadCategoryPermission == 'added')
+                                    <x-slot name="append">
+                                        <button type="button"
+                                            class="btn btn-outline-secondary border-grey add-lead-category"
+                                            data-toggle="tooltip" data-original-title="{{ __('app.add').' '.__('modules.lead.leadCategory') }}">@lang('app.add')</button>
+                                    </x-slot>
+                                @endif
+                            </x-forms.input-group>
+                        </div>
+                    @endif
 
                 </div>
 
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-top-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
                     @lang('modules.lead.companyDetails')</h4>
 
 
@@ -138,9 +155,8 @@ $addProductPermission = user()->permission('add_product');
                             </x-forms.textarea>
                         </div>
                     </div>
-
                 </div>
-                    <x-forms.custom-field :fields="$fields" :model="$leadContact"></x-forms.custom-field>
+
                 <x-form-actions>
                     <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
                     </x-forms.button-primary>

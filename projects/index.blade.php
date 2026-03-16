@@ -72,7 +72,7 @@
         <!-- MORE FILTERS START -->
         <x-filters.more-filter-box>
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.dateFilterOn')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.dateFilterOn')</label>
                 <div class="select-filter mb-4">
                     <select class="form-control select-picker" name="date_filter_on" id="date_filter_on">
                         <option value="deadline">@lang('app.deadline')</option>
@@ -81,8 +81,8 @@
                 </div>
             </div>
 
-            <div class="more-filter-items @if(!in_array('clients', user_modules())) d-none @endif">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.clientName')</label>
+            <div class="more-filter-items">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.clientName')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="client_id" id="client_id" data-container="body"
@@ -99,7 +99,7 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 "
+                <label class="f-14 text-dark-grey mb-12 text-capitalize"
                     for="usr">@lang('modules.projects.projectCategory')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
@@ -117,7 +117,7 @@
 
             @if (!in_array('client', user_roles()))
                 <div class="more-filter-items">
-                    <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.projectMember')</label>
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.projectMember')</label>
                     <div class="select-filter mb-4">
                         <div class="select-others">
                             <select class="form-control select-picker" name="employee_id" id="employee_id"
@@ -135,7 +135,7 @@
             @endif
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.department')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.department')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="team_id" id="team_id" data-live-search="true"
@@ -150,7 +150,7 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.pinned')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.pinned')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="pinned" id="pinned" data-container="body"
@@ -163,7 +163,7 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 "
+                <label class="f-14 text-dark-grey mb-12 text-capitalize"
                     for="usr">@lang('app.public')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
@@ -273,17 +273,14 @@ $deleteProjectPermission = user()->permission('delete_projects');
         var deadLineStartDate = '';
         var deadLineEndDate = '';
 
-        $(document).on('show.bs.dropdown', '.table-responsive', function() {
-            $('.table-responsive').css( "overflow", "inherit" );
-        });
-
+        var startFilterDate = '';
+        var endFilterDate = '';
         $(".select-picker").selectpicker();
 
         $('#projects-table').on('preXhr.dt', function(e, settings, data) {
 
             var dateRangePicker = $('#datatableRange').data('daterangepicker');
             var startFilterDate = $('#datatableRange').val();
-            let endFilterDate;
 
             if (startFilterDate == '') {
                 startFilterDate = null;
@@ -332,16 +329,6 @@ $deleteProjectPermission = user()->permission('delete_projects');
         const showTable = () => {
             window.LaravelDataTables["projects-table"].draw(false);
         }
-
-        $( document ).ready(function() {
-            @if (!is_null(request('start')) && !is_null(request('end')))
-            $('#datatableRange').val('{{ request('start') }}' +
-            ' @lang("app.to") ' + '{{ request('end') }}');
-            $('#datatableRange').data('daterangepicker').setStartDate("{{ request('start') }}");
-            $('#datatableRange').data('daterangepicker').setEndDate("{{ request('end') }}");
-                showTable();
-            @endif
-        });
 
         $('#client_id, #status, #employee_id, #team_id, #category_id, #pinned, #date_filter_on, #public, #progress').on('change keyup',
             function() {

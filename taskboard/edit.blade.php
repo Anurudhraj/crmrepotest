@@ -62,6 +62,7 @@
     <x-forms.button-primary id="update-board-column" icon="check">@lang('app.save')</x-forms.button-primary>
 </div>
 
+<script src="{{ asset('vendor/jquery/bootstrap-colorpicker.js') }}"></script>
 <script>
     $("#updateTaskBoardColumn .select-picker").selectpicker();
 

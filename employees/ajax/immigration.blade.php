@@ -52,7 +52,7 @@ $editImmigrationPermission = user()->permission('edit_immigration');
 
                 <x-cards.data-row :label="__('modules.employees.passportNumber')" :value="$passport->passport_number ?? '--'" />
                 <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
-                    <p class="mb-0 text-lightest f-14 w-30 d-inline-block ">
+                    <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                         @lang('app.nationality')</p>
                     <p class="mb-0 text-dark-grey f-14 w-70">
                         <span class='flag-icon flag-icon-{{ strtolower($passport->country->iso) }} flag-icon-squared'></span>
@@ -63,7 +63,7 @@ $editImmigrationPermission = user()->permission('edit_immigration');
                 <x-cards.data-row :label="__('modules.employees.issueDate')" :value=" $passport->issue_date ? $passport->issue_date->format(company()->date_format) : '--'" />
                 <x-cards.data-row :label="__('modules.employees.expiryDate')" :value=" $passport->expiry_date  ? $passport->expiry_date->format(company()->date_format) : '--'" />
                 <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
-                    <p class="mb-0 text-lightest f-14 w-30 d-inline-block ">
+                    <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                         @lang('modules.employees.scanCopy')</p>
                     <p class="mb-0 text-dark-grey f-14 w-70">
                         @if($passport->file)

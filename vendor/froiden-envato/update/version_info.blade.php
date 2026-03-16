@@ -38,7 +38,7 @@
         <td>PHP Version</td>
         <td>
             {{ phpversion() }}
-            @if (version_compare(PHP_VERSION, '8.2.0') >= 0)
+            @if (version_compare(PHP_VERSION, '8.1.0') >= 0)
                  <i class="fa fa-check-circle text-success"></i>
             @else
                 <i data-toggle="tooltip" data-original-title="@lang('messages.phpUpdateRequired')" class="fa fa-warning text-danger"></i>
@@ -88,11 +88,7 @@
                 <tr>
                     <td>Support Expire</td>
                     <td>
-                        <span>{{\Carbon\Carbon::parse($envatoUpdateCompanySetting->supported_until)->translatedFormat('d M, Y')}} <small class="f-12 text-muted"> ({{\Carbon\Carbon::parse($envatoUpdateCompanySetting->supported_until)->diffForHumans()}})</small>
-                            @if(\Carbon\Carbon::parse($envatoUpdateCompanySetting->supported_until)->lessThan(now()))
-                            <span class="text-danger">Expired</span>
-                            @endif
-                        </span>
+                        <span>{{\Carbon\Carbon::parse($envatoUpdateCompanySetting->supported_until)->translatedFormat('d M, Y')}} <small class="f-12 text-muted"> ({{\Carbon\Carbon::parse($envatoUpdateCompanySetting->supported_until)->diffForHumans()}})</small></span>
                     </td>
                 </tr>
             @endif

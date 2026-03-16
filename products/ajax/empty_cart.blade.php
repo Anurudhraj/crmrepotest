@@ -22,7 +22,7 @@
     <!-- HEADING START -->
     <div class="d-block d-lg-flex d-md-flex justify-content-between action-bar">
         <div class="px-lg-4 px-md-4 px-3 py-3">
-            <h4 class="mb-0 f-21 font-weight-normal "><i class="bi bi-cart3"></i> @lang('app.cart')</h4>
+            <h4 class="mb-0 f-21 font-weight-normal text-capitalize"><i class="bi bi-cart3"></i> @lang('app.cart')</h4>
         </div>
     </div>
 

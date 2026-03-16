@@ -1,4 +1,4 @@
- <div class="p-4 col-lg-12 col-md-12 ntfcn-tab-content-left w-100 ">
+ <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100 p-4 ">
     <div class="row">
 
         <div class="col-lg-3">
@@ -7,7 +7,7 @@
                 @foreach ($dateFormat as $format)
                     <option value="{{ $format }}"
                             @if (companyOrGlobalSetting()->date_format == $format) selected @endif>
-                        {{ $format }} ({{ $dateObject->setTimezone(companyOrGlobalSetting()->timezone)->translatedFormat($format) }})
+                        {{ $format }} ({{ $dateObject->translatedFormat($format) }})
                     </option>
                 @endforeach
             </x-forms.select>
@@ -48,25 +48,15 @@
             </x-forms.select>
         </div>
         <div class="col-lg-2">
-            <!-- Language selection dropdown -->
-            <x-forms.select
-                fieldId="locale"
-                :fieldLabel="__('modules.accountSettings.language')"
-                fieldName="locale"
-                search="true"
-                :popover="__('modules.accountSettings.appLanguageInfo')"
-            >
+            <x-forms.select fieldId="locale" :fieldLabel="__('modules.accountSettings.language')"
+                            fieldName="locale" search="true" :popover="__('modules.accountSettings.appLanguageInfo')">
                 @foreach ($languageSettings as $language)
-                    <option
-                        {{ companyOrGlobalSetting()->locale == $language->language_code ? 'selected' : '' }}
-                        data-content="<span class='flag-icon flag-icon-{{ $language->flag_code == 'en' ? 'gb' : str($language->flag_code)->lower() }} flag-icon-squared'></span> {{ $language->language_name . ($language->is_rtl == 1 ? ' (' . __('app.rtl') . ')' : '') }}"
-                        value="{{ $language->language_code }}"
-                    >
-                    </option>
+                    <option {{ companyOrGlobalSetting()->locale == $language->language_code ? 'selected' : '' }}
+                            data-content="<span class='flag-icon flag-icon-{{ ($language->flag_code == 'en') ? 'gb' : strtolower($language->flag_code) }} flag-icon-squared'></span> {{ $language->language_name }}"
+                            value="{{ $language->language_code }}">{{ $language->language_name }}</option>
                 @endforeach
             </x-forms.select>
         </div>
-
         <div class="col-lg-3">
             <x-forms.select fieldId="session_driver"
                             :fieldLabel="__('modules.accountSettings.sessionDriver')"

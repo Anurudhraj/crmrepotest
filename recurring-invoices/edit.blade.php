@@ -38,7 +38,7 @@
         <div class="bg-white rounded b-shadow-4 create-inv">
             <!-- HEADING START -->
             <div class="px-lg-4 px-md-4 px-3 py-3">
-                <h4 class="mb-0 f-21 font-weight-normal ">@lang('app.invoiceDetails')</h4>
+                <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('app.invoiceDetails')</h4>
             </div>
             <!-- HEADING END -->
             <hr class="m-0 border-top-grey">
@@ -50,18 +50,8 @@
                 <div class="row px-lg-4 px-md-4 px-3 py-3">
                      <!-- CLIENT START -->
                      <div class="col-md-3 mb-4">
-                        @if(count($invoice->recurrings) > 0)
-                            <x-forms.label fieldId="client_id" :fieldLabel="__('app.client')">
-                            </x-forms.label>
-                            <div class="input-group">
-                                <input type="text" id="client_list_id" name="client_id"
-                                    class="px-6 position-relative text-dark font-weight-normal form-control height-35 rounded p-0 text-left f-15"
-                                    placeholder="@lang('placeholders.date')"
-                                    value="{{ $invoice->client ? $invoice->client->name : '' }}" {{$recurringInvoice}}>
-                            </div>
-                        @else
-                            <x-client-selection-dropdown :clients="$clients" :selected="$invoice->client_id" />
-                        @endif
+                        <x-client-selection-dropdown :clients="$clients" :selected="$invoice->client_id" />
+
                     </div>
                     <!-- CLIENT END -->
                     <!-- PROJECT START -->
@@ -167,7 +157,7 @@
                     <div class="col-md-4 {{ company()->show_shipping_address == 'yes' ? '' : 'd-none' }}  "
                          id="shipping_address_div">
                         <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
-                            <label class="f-14 text-dark-grey mb-12  w-100"
+                            <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                                    for="usr">@lang('modules.invoices.shippingAddress')</label>
                             <textarea class="form-control f-14 pt-2" rows="3"
                                       placeholder="@lang('placeholders.address')"
@@ -277,12 +267,10 @@
                                     @endforeach
                                 </select>
                                 @if ($addProductPermission == 'all' || $addProductPermission == 'added')
-                                    @if(!(count($invoice->recurrings) > 0))
-                                        <x-slot name="append">
-                                            <a href="{{ route('products.create') }}" data-redirect-url="no"
-                                            class="btn btn-outline-secondary border-grey openRightModal">@lang('app.add')</a>
-                                        </x-slot>
-                                    @endif
+                                    <x-slot name="append">
+                                        <a href="{{ route('products.create') }}" data-redirect-url="no"
+                                        class="btn btn-outline-secondary border-grey openRightModal">@lang('app.add')</a>
+                                    </x-slot>
                                 @endif
                             </x-forms.input-group>
 
@@ -393,7 +381,7 @@
                                         </td>
                                         <td class="border-left-0">
                                             <input type="file"
-                                                   class="dropify" {{$recurringInvoice}}
+                                                   class="dropify"
                                                    name="invoice_item_image[]"
                                                    data-allowed-file-extensions="png jpg jpeg bmp"
                                                    data-messages-default="test"
@@ -436,7 +424,7 @@
 
                 <!-- TOTAL, DISCOUNT START -->
                 <div class="d-flex px-lg-4 px-md-4 px-3 pb-3 c-inv-total">
-                    <table width="100%" class="text-right f-14 ">
+                    <table width="100%" class="text-right f-14 text-capitalize">
                         <tbody>
                         <tr>
                             <td width="50%" class="border-0 d-lg-table d-md-table d-none"></td>
@@ -520,10 +508,10 @@
                 <!-- NOTE AND TERMS AND CONDITIONS START -->
                 <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
                     <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
-                        <label class="f-14 text-dark-grey mb-12  w-100"
+                        <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                                for="usr">@lang('modules.invoices.note')</label>
                         <textarea class="form-control" name="note" id="note" rows="4"
-                                  placeholder="@lang('placeholders.invoices.note')" {{$recurringInvoice}}>{{ $invoice->note }}</textarea>
+                                  placeholder="@lang('placeholders.invoices.note')">{{ $invoice->note }}</textarea>
                     </div>
                 </div>
                 <!-- NOTE AND TERMS AND CONDITIONS END -->
@@ -622,14 +610,13 @@
 
         function addProduct(id) {
             var currencyId = $('#currency_id').val();
-            var exchangeRate = $('#exchange_rate').val();
+
             $.easyAjax({
                 url: "{{ route('invoices.add_item') }}",
                 type: "GET",
                 data: {
                     id: id,
-                    currencyId: currencyId,
-                    exchangeRate: exchangeRate
+                    currencyId: currencyId
                 },
                 blockUI: true,
                 success: function (response) {

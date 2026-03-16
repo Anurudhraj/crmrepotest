@@ -21,7 +21,7 @@
         <div @class(['alert-success' => !$expired,'alert-danger' => $expired,'alert'])>
             <div class="row">
                 <div class="col-md-8">
-                    <h2 class="mb-0 f-21 font-weight-normal ">
+                    <h2 class="mb-0 f-21 font-weight-normal text-capitalize">
                         <strong>Support @if($expired) Expired @endif
                         </strong>
                     </h2>

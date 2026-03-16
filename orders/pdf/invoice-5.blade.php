@@ -83,7 +83,7 @@
             text-transform: uppercase;
         }
 
-        . {
+        .text-capitalize {
             text-transform: capitalize;
         }
 
@@ -229,13 +229,9 @@
             height: 50px;
         }
 
-        .note-text {
-            max-width:175px;
-        }
-
         .word-break {
+            max-width:175px;
             word-wrap:break-word;
-            word-break: break-all;
         }
 
         .summary {
@@ -320,7 +316,7 @@
                             <tr>
                                 <td class="f-14 text-black">
                                     <p class="line-height mb-0">
-                                        <span class="text-grey ">
+                                        <span class="text-grey text-capitalize">
                                             @lang('modules.invoices.project')</span><br>
                                         @if ($order->project)
                                         {{$order->project->project_name}}
@@ -333,11 +329,11 @@
                             <td class="f-14 text-black">
                                 @if (($invoiceSetting->show_client_name == 'yes' || $invoiceSetting->show_client_email == 'yes' || $invoiceSetting->show_client_phone == 'yes' || $invoiceSetting->show_client_company_name == 'yes' || $invoiceSetting->show_client_company_address == 'yes') && $client)
                                     <p class="line-height mb-0">
-                                        <span class="text-grey ">
+                                        <span class="text-grey text-capitalize">
                                             @lang("modules.invoices.billedTo")</span><br>
 
                                             @if ($client->name && $invoiceSetting->show_client_name == 'yes')
-                                                {{ $client->name_salutation }}<br>
+                                                {{ $client->name }}<br>
                                             @endif
 
                                             @if ($client->email && $invoiceSetting->show_client_email == 'yes')
@@ -345,7 +341,7 @@
                                             @endif
 
                                             @if ($client->mobile && $invoiceSetting->show_client_phone == 'yes')
-                                                {{ $client->mobile_with_phonecode }}<br>
+                                                {{ $client->mobile }}<br>
                                             @endif
 
                                             @if ($client->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -366,7 +362,7 @@
                             <td class="f-14 text-black">
                                 @if ($order->show_shipping_address == 'yes' && $client->clientDetails->shipping_address && $invoiceSetting->show_client_company_address == 'yes')
                                     <p class="line-height"><span
-                                            class="text-grey ">@lang('app.shippingAddress')</span><br>
+                                            class="text-grey text-capitalize">@lang('app.shippingAddress')</span><br>
                                         {!! nl2br($client->clientDetails->shipping_address) !!}</p>
                                 @endif
                             </td>
@@ -385,7 +381,7 @@
 
     <table width="100%" class="f-14 b-collapse">
         <tr>
-            <td height="10" colspan="{{ $invoiceSetting->hsn_sac_code_show ? '7' : '6' }}"></td>
+            <td height="10" colspan="2"></td>
         </tr>
         <!-- Table Row Start -->
         <tr class="main-table-heading text-grey">
@@ -394,18 +390,18 @@
                 <td align="right">@lang("app.hsnSac")</td>
             @endif
             <th class="qty">@lang('modules.invoices.qty')</th>
-            s<td align="right">@lang('app.sku')</td>
+            <td align="right">@lang('app.sku')</td>
             <td align="right">@lang("modules.invoices.unitPrice")</td>
             <td align="right">@lang("modules.invoices.tax")</td>
             <td align="right" width="{{ $invoiceSetting->hsn_sac_code_show ? '17%' : '20%' }}">@lang("modules.invoices.amount")
                 ({{ $order->currency->currency_code }})</td>
         </tr>
         <!-- Table Row End -->
-        @foreach ($order->items->sortBy('field_order') as $item)
+        @foreach ($order->items as $item)
             @if ($item->type == 'item')
                 <!-- Table Row Start -->
                 <tr class="main-table-items text-black">
-                    <td width="40%" class="border-bottom-0 word-break">
+                    <td width="40%" class="border-bottom-0">
                         {{ $item->item_name }}
                     </td>
                     @if($invoiceSetting->hsn_sac_code_show)
@@ -421,7 +417,7 @@
                 @if ($item->item_summary != '' || $item->orderItemImage)
                 {{-- DOMPDF HACK FOR RENDER IN TABLE --}}
                 </table>
-                    <div class="f-13 summary text-black border-bottom-0 word-break">
+                    <div class="f-13 summary text-black border-bottom-0">
                         {!! nl2br(pdfStripTags($item->item_summary)) !!}
                         @if ($item->orderItemImage)
                             <p class="mt-2">
@@ -514,11 +510,11 @@
                 <!-- Table Row End -->
                 <!-- Table Row Start -->
                 <tr class="text-grey">
-                    <td class="f-11 line-height word-break note-text">{!! $order->note ? nl2br($order->note) : '--' !!}</td>
+                    <td class="f-11 line-height word-break">{!! $order->note ? nl2br($order->note) : '--' !!}</td>
                 </tr>
                 @if ($invoiceSetting->other_info)
                     <tr class="text-grey">
-                        <td class="f-11 line-height word-break note-text">
+                        <td class="f-11 line-height word-break">
                             <br>{!! nl2br($invoiceSetting->other_info) !!}
                         </td>
                     </tr>

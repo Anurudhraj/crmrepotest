@@ -1,3 +1,7 @@
+@php
+$editPipelinePermission = user()->permission('edit_deal_pipeline');
+$mangeLeadStagePermission = user()->permission('manage_deal_stages');
+@endphp
 <div class="table-responsive p-20 pipelineData">
 
     <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100">
@@ -5,10 +9,14 @@
             <div class="row no-gutters border rounded my-3 px-4 py-2">
                 <div class="col-md-6">
                     <div class="heading-h4"><x-status :value="$pipeline->name" :style="'color:'.$pipeline->label_color" />
-    
+                    @if($editPipelinePermission == 'all'
+                    || ($editPipelinePermission == 'added' && user()->id == $pipeline->added_by)
+                    || ($editPipelinePermission == 'owned' && user()->id == $pipeline->added_by)
+                    || ($editPipelinePermission == 'both' && user()->id == $pipeline->added_by))
                         <a href="javascript:;" title="@lang('app.edit')" data-pipeline-id="{{ $pipeline->id }}"
                         class="edit-pipeline "> <i class="fa fa-edit icons mr-2"></i>
                         </a>
+                    @endif
                 </div>
 
                     <div class="simple-text text-lightest mt-1">{{ $pipeline->stages->count() }} @lang('modules.deal.stages')
@@ -45,8 +53,8 @@
 
                             <td>
                                 <x-forms.radio fieldId="pipeline_id_{{ $stage->id }}" class="set_default_stage"
-                                    data-status-id="{{ $stage->id }}" data-pipeline-id="{{ $pipeline->id }}"  :fieldLabel="__('app.default')"
-                                    fieldName="{{$pipeline->name}}" fieldValue="{{ $stage->id }}"
+                                    data-status-id="{{ $stage->id }}" data-pipeline-id="{{ $stage->pipeline->id }}"  :fieldLabel="__('app.default')"
+                                    fieldName="{{$stage->pipeline->name}}" fieldValue="{{ $stage->id }}"
                                     :checked="($stage->default == 1) ? 'checked' : ''">
                                 </x-forms.radio>
                             </td>
@@ -81,13 +89,6 @@
                 </x-table>
             </div>
         @empty
-        <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
-            <i class="fa fa-clipboard f-21 w-100"></i>
-    
-            <div class="f-15 mt-4">
-                - @lang('messages.noRecordFound') -
-            </div>
-        </div>
         @endforelse
 
 

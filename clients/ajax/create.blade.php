@@ -12,7 +12,7 @@ $addPermission = user()->permission('add_clients');
         <x-form id="save-client-data-form">
 
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('modules.employees.accountDetails')</h4>
 
                 @if (isset($lead->id)) <input type="hidden" name="lead"
@@ -67,7 +67,7 @@ $addPermission = user()->permission('add_clients');
                                     search="true">
                                     @foreach ($countries as $item)
                                     <option data-tokens="{{ $item->iso3 }}" data-phonecode = "{{$item->phonecode}}"
-                                        data-iso="{{ $item->iso }}" data-content="<span class='flag-icon flag-icon-{{ strtolower($item->iso) }} flag-icon-squared'></span> {{ $item->nicename }}"
+                                        data-content="<span class='flag-icon flag-icon-{{ strtolower($item->iso) }} flag-icon-squared'></span> {{ $item->nicename }}"
                                         @selected(isset($lead) && $item->nicename == $lead->country)
                                         value="{{ $item->id }}">{{ $item->nicename }}</option>
                                 @endforeach
@@ -83,7 +83,7 @@ $addPermission = user()->permission('add_clients');
                                         search="true">
 
                                         @foreach ($countries as $item)
-                                            <option data-tokens="{{ $item->name }}" data-country-iso="{{ $item->iso }}"
+                                            <option data-tokens="{{ $item->name }}"
                                                     data-content="{{$item->flagSpanCountryCode()}}"
                                                     @selected(isset($lead) && $item->nicename == $lead->country)
                                                     value="{{ $item->phonecode }}">{{ $item->phonecode }}
@@ -131,7 +131,7 @@ $addPermission = user()->permission('add_clients');
                                 data-live-search="true">
                                 <option value="">--</option>
                                 @foreach ($categories as $category)
-                                    <option @selected(isset($lead) && $lead->category_id == $category->id) value="{{ $category->id }}">
+                                    <option @if (isset($lead) && $lead->category_id == $category->id) selected @endif value="{{ $category->id }}">
                                   {{ $category->category_name }}</option>
                                 @endforeach
                             </select>
@@ -198,7 +198,7 @@ $addPermission = user()->permission('add_clients');
 
                 </div>
 
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-top-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
                     @lang('modules.client.companyDetails')</h4>
                 <div class="row p-20">
                     <div class="col-md-3">
@@ -352,14 +352,7 @@ $addPermission = user()->permission('add_clients');
 
         $('#country').change(function(){
             var phonecode = $(this).find(':selected').data('phonecode');
-            var iso = $(this).find(':selected').data('iso');
-
-            $('#country_phonecode').find('option').each(function() {
-                if ($(this).data('country-iso') === iso) {
-                    $(this).val(phonecode);
-                    $(this).prop('selected', true); // Set the option as selected
-                }
-            });
+            $('#country_phonecode').val(phonecode);
             $('.select-picker').selectpicker('refresh');
         });
 
@@ -371,12 +364,6 @@ $addPermission = user()->permission('add_clients');
         $('#category_id').change(function(e) {
 
             let categoryId = $(this).val();
-
-            if (categoryId === '') {
-                $('#sub_category_id').html('<option value="">--</option>');
-                $('#sub_category_id').selectpicker('refresh');
-                return; // Stop further execution when no category is selected
-            }
 
             var url = "{{ route('get_client_sub_categories', ':id') }}";
             url = url.replace(':id', categoryId);

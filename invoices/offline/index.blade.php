@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-lg-12 col-md-12 mt-3 d-none" id="offline_description_div">
                             <div class="form-group c-inv-select mb-0">
-                                <label class="f-14 text-dark-grey mb-12  w-100"
+                                <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                                     for="usr">@lang('modules.invoices.paymentDescription')</label>
                                 <p class="f-15" id="offline_description"></p>
                             </div>
@@ -60,18 +60,7 @@
             type: "POST",
             redirect: true,
             file: true,
-            disableButton: true,
-            buttonSelector: '#save-offline-payment',
-            data: $('#offline-payment').serialize(),
-            success: function(response) {
-                if (response.status === 'success') {
-                    $(MODAL_LG).modal('hide');
-                    $('.payNowButton').hide();
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 800);
-                }
-            }
+            data: $('#offline-payment').serialize()
         })
     });
 

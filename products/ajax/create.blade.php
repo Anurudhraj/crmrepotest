@@ -11,7 +11,7 @@
             @include('sections.password-autocomplete-hide')
 
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('app.menu.addProducts')</h4>
                 <div class="row p-20">
                     <div class="col-lg-12">
@@ -129,13 +129,6 @@
                                 <x-forms.checkbox class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.downloadable')"
                                                   fieldName="downloadable" fieldId="downloadable" fieldValue="true"
                                                   fieldRequired="true" :popover="__('messages.downloadable')"/>
-                            </div>
-
-                            <div class="col-lg-4 col-md-6">
-                                <x-forms.text fieldId="sku" :fieldLabel="__('app.sku')"
-                                              fieldName="sku"
-                                              :fieldPlaceholder="__('placeholders.sku')">
-                                </x-forms.text>
                             </div>
 
                             <div class="col-lg-12 col-xl-12  mt-2 downloadable d-none">

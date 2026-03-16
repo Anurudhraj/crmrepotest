@@ -17,7 +17,7 @@
                     showCredit: false,
                     theme: "inverse",
                     size: "small",
-                    position: '{{ isRtl() ? 'bottom-left' : 'bottom-right' }}',
+                    position: '{{ user()->rtl ? 'bottom-left' : 'bottom-right' }}',
                     text: {
                         'tip.state.unsubscribed': "@lang('app.onesignal.tip.state.unsubscribed')",
                         'tip.state.subscribed': "@lang('app.onesignal.tip.state.subscribed')",
@@ -105,6 +105,6 @@
             cluster: '{{ $pusherSettings->pusher_cluster }}',
             forceTLS: '{{ $pusherSettings->force_tls }}'
         });
-
+        
     </script>
 @endif

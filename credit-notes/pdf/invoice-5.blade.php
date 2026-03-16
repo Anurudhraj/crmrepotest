@@ -86,7 +86,7 @@
             text-transform: uppercase;
         }
 
-        . {
+        .text-capitalize {
             text-transform: capitalize;
         }
 
@@ -256,11 +256,8 @@
             height: 50px;
         }
 
-        .note-text {
-            max-width: 175px;
-        }
-
         .word-break {
+            max-width: 175px;
             word-wrap: break-word;
             word-break: break-all;
         }
@@ -356,7 +353,7 @@
     <!-- Table Row Start -->
     <tr>
         <td colspan="2">
-            @if (!is_null($creditNote->project_id) && !is_null($creditNote->project) && !is_null($creditNote->project->clientDetails))
+            @if (!is_null($creditNote->project_id) && !is_null($creditNote->project->clientDetails))
                 @php
                     $client = $creditNote->project->client;
                 @endphp
@@ -371,15 +368,14 @@
 
                         <p class="line-height mb-0">
                                     <span
-                                        class="text-grey ">@lang("modules.invoices.billedTo")</span><br>
-                            {{ $client->name_salutation }}<br>
-                            {{ $client->email }}<br>
+                                        class="text-grey text-capitalize">@lang("modules.invoices.billedTo")</span><br>
+                            {{ $client->name }}<br>
                             {{ $client->clientDetails->company_name }}<br>
                             {!! nl2br($client->clientDetails->address) !!}
 
                             @if (($invoiceSetting->show_project == 1) && (isset($creditNote->project)))
                                 <br><br>
-                                <span class="text-grey ">@lang("modules.invoices.projectName")</span><br>
+                                <span class="text-grey text-capitalize">@lang("modules.invoices.projectName")</span><br>
                                 {{ $creditNote->project->project_name }}
                             @endif
                         </p>
@@ -406,7 +402,7 @@
 </table>
 <table width="100%" class="f-14 b-collapse">
     <tr>
-        <td height="10" colspan="{{ $invoiceSetting->hsn_sac_code_show ? '6' : '5' }}"></td>
+        <td height="10" colspan="2"></td>
     </tr>
     <!-- Table Row Start -->
     <tr class="main-table-heading text-grey">
@@ -427,7 +423,7 @@
     @if ($item->type == 'item')
         <!-- Table Row Start -->
             <tr class="main-table-items text-black">
-                <td width="40%" class="word-break">
+                <td width="40%">
                     {{ $item->item_name }}
                 </td>
                 @if($invoiceSetting->hsn_sac_code_show)
@@ -444,7 +440,7 @@
             @if ($item->item_summary != '' || $item->creditNoteItemImage)
                 {{-- DOMPDF HACK FOR RENDER IN TABLE --}}
 </table>
-<div class="f-13 summary text-black border-bottom-0 description word-break">
+<div class="f-13 summary text-black border-bottom-0 description">
     {!! nl2br(pdfStripTags($item->item_summary)) !!}
     @if ($item->creditNoteItemImage)
         <p class="mt-2">
@@ -583,7 +579,7 @@
         <!-- Table Row End -->
         <!-- Table Row Start -->
         <tr class="text-grey">
-            <td class="f-11 line-height word-break note-text">{!! $creditNote->note ? nl2br($creditNote->note) : '--' !!}</td>
+            <td class="f-11 line-height word-break">{!! $creditNote->note ? nl2br($creditNote->note) : '--' !!}</td>
         </tr>
     @endif
     <!-- Table Row End -->

@@ -149,7 +149,7 @@
 
                 @if(!is_null(global_setting()->google_map_key))
                     <div class="col-lg-12">
-                        <h4 class="f-16 font-weight-500 ">
+                        <h4 class="f-16 font-weight-500 text-capitalize">
                             @lang('modules.accountSettings.businessMapLocation')</h4>
 
                         <div class="pac-card" id="pac-card">

@@ -42,11 +42,6 @@ $addTaskPermission = ($project->project_admin == user()->id) ? 'all' : user()->p
         </div>
     </div>
 
-
-    <x-alert type="warning">
-        <div><b>Note:</b>@lang('modules.tasks.taskboardNote') <a href="{{ route('tasks.index') }}">@lang('app.tasks')</a> @lang('modules.tasks.menu') </div>
-    </x-alert>
-
     <div class="w-task-board-panel d-flex" id="taskboard-columns">
     </div>
 </div>

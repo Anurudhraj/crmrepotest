@@ -59,7 +59,7 @@
     var id = $('#agent_id').val();
     agentGroups(id);
 
-    $(document).on('change', '#agent_id', function() {
+    $('#agent_id').change(function(){
         var agentId = $(this).val();
         agentGroups(agentId);
     });

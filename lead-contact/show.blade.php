@@ -24,8 +24,8 @@ $viewDeals = user()->permission('view_deals');
 
                 @if ($viewDeals == 'all'
                 || ($viewDeals == 'added' && $leadContact->added_by == user()->id)
-                || ($viewDeals == 'owned' && $leadContact->lead_owner == user()->id)
-                || ($viewDeals == 'both' && ($leadContact->added_by == user()->id || $leadContact->lead_owner == user()->id))
+                || ($viewDeals == 'owned' && $leadContact->added_by == user()->id)
+                || ($viewDeals == 'both' && $leadContact->added_by == user()->id)
                 )
                 <x-tab :href="route('lead-contact.show', $leadContact->id).'?tab=deal'" :text="__('modules.leadContact.deal')" class="deal" ajax="false"/>
             @endif

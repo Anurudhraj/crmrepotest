@@ -1,7 +1,5 @@
 <div class="col-xl-8 col-lg-12 col-md-12 ntfcn-tab-content-left w-100 p-4 ">
 
-
-
     <div class="row">
         <div class="col-sm-12" id="alert">
             @if ($smtpSetting->mail_driver == 'smtp')
@@ -20,23 +18,13 @@
                     <x-alert type="danger" icon="info-circle">
                         @lang('messages.smtpError')
                     </x-alert>
-
-                    <x-alert type="secondary" icon="info-circle">
-                        <strong>@lang('messages.smtpRecommendation')</strong>
-                        <ul>
-                            <li class="py-2">1. <a href="https://get.smtp2go.com/froiden" target="_blank">SMTP2GO.COM</a></li>
-                            <li>2. <a href="https://pstk.smtp.com/froiden" target="_blank">SMTP.COM</a></li>
-                        </ul>
-                    </x-alert>
                 @endif
 
             @endif
         </div>
     </div>
 
-
     <div class="row">
-
         @include('sections.password-autocomplete-hide')
 
         <div class="col-lg-6 col-md-6 ">
@@ -147,7 +135,7 @@
 </div>
 
 <div class="col-xl-4 col-lg-12 col-md-12 ntfcn-tab-content-right border-left-grey p-4">
-    <h4 class="f-16  f-w-500 text-dark-grey">@lang("modules.emailSettings.notificationTitle")</h4>
+    <h4 class="f-16 text-capitalize f-w-500 text-dark-grey">@lang("modules.emailSettings.notificationTitle")</h4>
     <div class="mb-3 d-flex">
 
         <x-forms.checkbox  :checked="$checkedAll==true"

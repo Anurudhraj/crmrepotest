@@ -39,11 +39,6 @@
                                 aria-controls="nav-general"
                                 aria-selected="false">@lang('app.menu.leaveGeneralSettings')</a>
 
-                            <a class="nav-item nav-link f-15 general" data-toggle="tab"
-                                href="{{ route('leaves-settings.index') }}?tab=archive" role="tab"
-                                aria-controls="nav-general"
-                                aria-selected="false">@lang('app.menu.archivedLeaveType')</a>
-
                         </div>
                     </nav>
                 </div>
@@ -79,7 +74,7 @@
         showBtn(activeTab);
 
         function showBtn(activeTab) {
-            (activeTab == 'general' || activeTab == 'archive') ? $('.actionBtn').addClass('d-none') : $('.actionBtn').removeClass('d-none')
+            (activeTab == 'general') ? $('.actionBtn').addClass('d-none') : $('.actionBtn').removeClass('d-none')
         }
 
         $("body").on("click", "#editSettings .nav a", function(event) {

@@ -5,7 +5,7 @@
 </div>
 
 @if ($cannotLogin == false)
-<x-form id="clockInForm">
+<x-form id="startTimerForm">
     <div class="modal-body">
             <div class="row justify-content-between">
                 <div class="col" id="task_div">
@@ -86,7 +86,7 @@
             buttonSelector: "#save-clock-in",
             disableButton: true,
             blockUI: true,
-            container: '#clockInForm',
+            container: '#startTimerForm',
             data: {
                 working_from: workingFrom,
                 location: location,

@@ -19,7 +19,7 @@ $deleteContractPermission = user()->permission('delete_contract');
                         </span>
                     </h4>
                     <div class="dropdown ml-auto comment-action">
-                        <button class="btn btn-lg f-14 p-0 text-lightest  rounded  dropdown-toggle"
+                        <button class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-ellipsis-h"></i>
                         </button>

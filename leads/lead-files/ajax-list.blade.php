@@ -15,9 +15,9 @@
             <td class="text-right pr-20">
                 @if ($viewLeadFilePermission == 'all' || ($viewLeadFilePermission == 'added' && $file->added_by == user()->id))
                     <div class="task_view">
-
-                        <x-file-view-button :file="$file"></x-file-view-button>
-
+                        <a class="taskView" href="{{ $file->file_url }}" target="_blank">
+                            @lang('app.view')
+                        </a>
                         <div class="dropdown">
                             <a href="{{ route('deal-files.download', $file->id) }}"
                                 class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"

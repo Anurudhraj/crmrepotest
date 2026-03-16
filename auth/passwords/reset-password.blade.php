@@ -2,7 +2,7 @@
     <form id="reset-password-form" action="{{ route('password.update') }}" class="ajax-form" method="POST">
         {{ csrf_field() }}
 
-        <h3 class=" mb-4 f-w-500">@lang('app.resetPassword')</h3>
+        <h3 class="text-capitalize mb-4 f-w-500">@lang('app.resetPassword')</h3>
 
         <div class="alert alert-success m-t-10 d-none" id="success-msg"></div>
 
@@ -37,7 +37,6 @@
         <div class="forgot_pswd mt-3">
             <a href="{{ route('login') }}" class="justify-content-center">@lang('app.login')</a>
         </div>
-        <input type="hidden" name="locale" value="{{ session()->has('locale') ? session('locale') : global_setting()->locale }}">
     </form>
 
     <x-slot name="scripts">

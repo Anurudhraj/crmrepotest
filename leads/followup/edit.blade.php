@@ -28,9 +28,9 @@
                         <div class="row">
                             <div class="col-md-6 mb-2">
                                 <x-forms.select fieldId="status" :fieldLabel="__('modules.employees.status')" fieldName="status" search="true">
-                                        <option value="pending"  @selected($follow->status == 'pending')  data-content="<i class='fa fa-circle mr-2 text-warning'></i> @lang('app.pending') " >@lang('app.pending')</option>
-                                        <option value="canceled" @selected($follow->status == 'canceled') data-content="<i class='fa fa-circle mr-2 text-red'></i> @lang('app.canceled') " >@lang('app.canceled')</option>
-                                        <option value="completed" @selected($follow->status == 'completed') data-content="<i class='fa fa-circle mr-2 text-dark-green'></i> @lang('app.completed') " >@lang('app.completed')</option>
+                                        <option value="pending"  @if($follow->status == 'pending') selected @endif  data-content="<i class='fa fa-circle mr-2 text-warning'></i> @lang('app.pending') " >@lang('app.pending')</option>
+                                        <option value="canceled" @if($follow->status == 'canceled') selected @endif data-content="<i class='fa fa-circle mr-2 text-red'></i> @lang('app.canceled') " >@lang('app.canceled')</option>
+                                        <option value="completed" @if($follow->status == 'completed') selected @endif data-content="<i class='fa fa-circle mr-2 text-dark-green'></i> @lang('app.completed') " >@lang('app.completed')</option>
                                     </x-forms.select>
                             </div>
 
@@ -52,9 +52,9 @@
                             <div class="col-md-6 mt-3">
                                 <x-forms.select fieldId="remind_type" fieldLabel="" fieldName="remind_type"
                                     search="true">
-                                    <option @selected($follow->remind_type == 'day') value="day">@lang('app.day')</option>
-                                    <option @selected($follow->remind_type == 'hour') value="hour">@lang('app.hour')</option>
-                                    <option @selected($follow->remind_type == 'minute') value="minute">@lang('app.minute')
+                                    <option @if ($follow->remind_type == 'day') selected @endif value="day">@lang('app.day')</option>
+                                    <option @if ($follow->remind_type == 'hour') selected @endif value="hour">@lang('app.hour')</option>
+                                    <option @if ($follow->remind_type == 'minute') selected @endif value="minute">@lang('app.minute')
                                     </option>
                                 </x-forms.select>
                             </div>

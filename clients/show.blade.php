@@ -117,10 +117,6 @@ $viewClientOrder = user()->permission('view_order');
 
 @endsection
 
-@push('styles')
-<script src="{{ asset('vendor/jquery/Chart.min.js') }}"></script>
-@endpush
-
 @section('content')
 
     <div class="content-wrapper border-top-0 client-detail-wrapper">

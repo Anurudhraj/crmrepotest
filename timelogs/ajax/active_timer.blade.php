@@ -144,7 +144,7 @@ $addTaskPermission = user()->permission('add_tasks');
                     <x-slot name="thead">
                         <th>#</th>
                         <th>@lang('app.task')</th>
-                        <th id="employee-header" width="5%" style="width: 20px !important;">@lang('app.employee')</th>
+                        <th id="employee-header">@lang('app.employee')</th>
                         <th class="text-right w-180">@lang('modules.timeLogs.startTime')</th>
                         <th class="text-right w-150">@lang('app.action')</th>
                     </x-slot>
@@ -162,7 +162,7 @@ $addTaskPermission = user()->permission('add_tasks');
                                     <p class="text-lightest mb-0 project-name">{{ $item->task->project->project_name }}</p>
                                 @endif
                             </td>
-                            <td class="text-right employee-user"  width="5%">
+                            <td class="text-right employee-user" >
                                <div style="display: none"> {{ $item->user->name }} </div>
                                 <x-employee-image :user="$item->user" />
                             </td>

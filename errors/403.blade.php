@@ -35,7 +35,7 @@
                     @endif
                 </div>
                 <div class="mt-4 text-sm text-center text-gray-500 uppercase">
-                    <a href="@auth {{ url()->previous() }} @elseauth {{ url('/') }} @endauth">@lang('app.backToHome')</a>
+                    <a href="@if(Auth::check()){{ url()->previous() }}@else {{ url('/') }} @endif">@lang('app.backToHome')</a>
                 </div>
             </div>
         </div>

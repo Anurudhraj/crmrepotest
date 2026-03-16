@@ -327,7 +327,6 @@
 
         .word-break {
             word-wrap:break-word;
-            word-break: break-all;
         }
 
         .f-13 {
@@ -444,7 +443,7 @@
 
                 @if ($estimate->client && $estimate->client->name && $invoiceSetting->show_client_name == 'yes')
                 <div>
-                    <span class="bold">{{ $estimate->client->name_salutation }}</span>
+                    <span class="bold">{{ $estimate->client->name }}</span>
                 </div>
                 @endif
 
@@ -456,7 +455,7 @@
 
                 @if ($estimate->client && $estimate->client->mobile && $invoiceSetting->show_client_phone == 'yes')
                 <div>
-                    <span>{{ $estimate->client->mobile_with_phonecode }}</span>
+                    <span>@if(isset($estimate->clientdetails->user->country))+{{$estimate->clientdetails->user->country->phonecode}} @endif  {{ $estimate->client->mobile }}</span>
                 </div>
                 @endif
 
@@ -507,14 +506,14 @@
                 </tr>
 
                 <?php $count = 0; ?>
-                @foreach($estimate->items->sortBy('field_order') as $item)
+                @foreach($estimate->items as $item)
                     @if($item->type == 'item')
                         <tr data-iterate="item">
                             <td>{{ ++$count }}</td> <!-- Don't remove this column as it's needed for the row commands -->
-                            <td class="word-break">
+                            <td>
                                 {{ $item->item_name }}
                                 @if(!is_null($item->item_summary))
-                                    <p class="item-summary word-break">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
+                                    <p class="item-summary">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
                                 @endif
                                 @if ($item->estimateItemImage)
                                     <p class="mt-2">

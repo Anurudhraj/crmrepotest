@@ -48,26 +48,7 @@
                         </x-slot>
                     </x-forms.input-group>
                 </div>
-                <div class="col-lg-12 ">
-                    <x-forms.label  fieldId="password"
-                                    :fieldLabel="__('app.test').' '.__('app.razorpayWebhookSecret')">
-                    </x-forms.label>
-                    <x-forms.input-group>
-                        <input type="password" name="test_razorpay_webhook_secret" id="test_razorpay_webhook_secret"
-                               class="form-control height-35 f-14"
-                               value="{{ $credentials->test_razorpay_webhook_secret }}"
-                               autocomplete="off">
-                        <x-slot name="preappend">
-                            <button type="button" data-toggle="tooltip"
-                                    data-original-title="{{ __('messages.viewKey') }}"
-                                    class="btn btn-outline-secondary border-grey height-35 toggle-password"><i
-                                    class="fa fa-eye"></i></button>
-                        </x-slot>
-                    </x-forms.input-group>
-                </div>
             </div>
-
-
         </div>
 
         <div class="col-lg-12">
@@ -96,36 +77,9 @@
                         </x-slot>
                     </x-forms.input-group>
                 </div>
-
-                <div class="col-lg-12 ">
-                    <x-forms.label  fieldId="password"
-                                    :fieldLabel="__('app.live').' '.__('app.razorpayWebhookSecret')">
-                    </x-forms.label>
-                    <x-forms.input-group>
-                        <input type="password" name="live_razorpay_webhook_secret" id="live_razorpay_webhook_secret"
-                               class="form-control height-35 f-14"
-                               value="{{ $credentials->live_razorpay_webhook_secret }}"
-                               autocomplete="off">
-                        <x-slot name="preappend">
-                            <button type="button" data-toggle="tooltip"
-                                    data-original-title="{{ __('messages.viewKey') }}"
-                                    class="btn btn-outline-secondary border-grey height-35 toggle-password"><i
-                                    class="fa fa-eye"></i></button>
-                        </x-slot>
-                    </x-forms.input-group>
-                </div>
             </div>
-
-
-
-
         </div>
-
-
-
-
-
-        <div class="col-lg-12 mt-3">
+        <div class="col-lg-12">
             <x-forms.label fieldId="" :fieldLabel="__('app.webhook')">
             </x-forms.label>
             <p class="text-bold"><span id="webhook-link-text">{{ $webhookRoute }}</span>

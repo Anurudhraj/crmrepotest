@@ -42,16 +42,6 @@
                                 href="{{ route('ticket-settings.index') }}?tab=reply-template" role="tab"
                                 aria-controls="nav-replyTemplates" aria-selected="true">@lang('app.menu.replyTemplates')
                             </a>
-
-                            <a class="nav-item nav-link f-15 method"
-                                href="{{ route('ticket-settings.index') }}?tab=round-robin" role="tab"
-                                aria-controls="nav-leadAgent" aria-selected="true">@lang('modules.deal.dealMethod')
-                            </a>
-
-                            <a class="nav-item nav-link f-15 ticket-agent-setting"
-                                href="{{ route('ticket-settings.index') }}?tab=ticket-agent-setting" role="tab"
-                                aria-controls="nav-ticketSetting" aria-selected="true">@lang('modules.deal.ticketVisibilitySetting')
-                            </a>
 {{--
                             <a class="nav-item nav-link f-15 email-sync"
                                 href="{{ route('ticket-settings.index') }}?tab=email-sync" role="tab"
@@ -411,13 +401,6 @@
         });
 
         /* change agent group */
-        $(".change-agent-group").selectpicker({
-            multipleSeparator: ", ",
-            selectedTextFormat: "count > 6",
-            countSelectedText: function(selected, total) {
-                return selected + " {{ __('app.groupSelected') }} ";
-            }
-        });
         $('.change-agent-group').change(function() {
 
             var agentId = $(this).data('agent-id');

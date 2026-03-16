@@ -50,7 +50,7 @@
     }
 
     @endif
-        @php
+@php
             $font = match ($invoiceSetting->locale) {
                 'ja' => 'ipag',
                 'hi' => 'hindi',
@@ -72,7 +72,7 @@
         font-weight: normal !important;
     }
 
-    @endif
+@endif
 
 
    * {

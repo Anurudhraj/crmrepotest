@@ -74,7 +74,7 @@ $editDocumentPermission = user()->permission('edit_documents');
                         <x-slot name="action">
                             <div class="dropdown ml-auto file-action">
                                 <button
-                                    class="btn btn-lg f-14 p-0 text-lightest  rounded  dropdown-toggle"
+                                    class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
                                     type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-ellipsis-h"></i>
                                 </button>

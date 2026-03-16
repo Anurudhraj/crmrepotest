@@ -10,7 +10,7 @@
         <x-setting-card method="POST">
             <x-slot name="header">
                 <div class="s-b-n-header" id="tabs">
-                    <h2 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                    <h2 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                         @lang($pageTitle)</h2>
                 </div>
             </x-slot>
@@ -67,7 +67,7 @@
             </div>
 
             <div class="col-xl-4 col-lg-12 col-md-12 ntfcn-tab-content-right border-left-grey p-4">
-                <h4 class="f-16  f-w-500 text-dark-grey">@lang("messages.googleCalendar.notificationTitle")</h4>
+                <h4 class="f-16 text-capitalize f-w-500 text-dark-grey">@lang("messages.googleCalendar.notificationTitle")</h4>
                 <div class="mb-3 d-flex">
                     <x-forms.checkbox :checked="$module->lead_status == '1'"
                                       :fieldLabel="__('app.menu.leads')"

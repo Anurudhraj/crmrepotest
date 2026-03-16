@@ -330,7 +330,6 @@
 
         .word-break {
             word-wrap:break-word;
-            word-break: break-all;
         }
 
 
@@ -406,7 +405,7 @@
 
                     @if ($order->client->name && $invoiceSetting->show_client_name == 'yes')
                         <div>
-                            <span class="bold">{{ $order->client->name_salutation }}</span>
+                            <span class="bold">{{ $order->client->name }}</span>
                         </div>
                     @endif
 
@@ -418,20 +417,13 @@
 
                     @if ($order->client->mobile && $invoiceSetting->show_client_phone == 'yes')
                         <div>
-                            <span>{{ $order->client->mobile_with_phonecode }}</span>
+                            <span>{{ $order->client->mobile }}</span>
                         </div>
                     @endif
 
                     @if ($order->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
                         <div>
                             <span>{{ $order->clientDetails->company_name }}</span>
-                        </div>
-                    @endif
-
-                    @if ($order->client->clientDetails->address && $invoiceSetting->show_client_company_address == 'yes')
-                        <div>
-                            <b>@lang('app.address') :</b>
-                            <span>{!! nl2br($order->clientDetails->address) !!}</span>
                         </div>
                     @endif
 
@@ -484,14 +476,14 @@
                 </tr>
 
                 <?php $count = 0; ?>
-                @foreach($order->items->sortBy('field_order') as $item)
+                @foreach($order->items as $item)
                     @if($item->type == 'item')
                         <tr data-iterate="item">
                             <td>{{ ++$count }}</td> <!-- Don't remove this column as it's needed for the row commands -->
-                            <td class="word-break">
+                            <td>
                                 {{ $item->item_name }}
                                 @if(!is_null($item->item_summary))
-                                    <p class="item-summary word-break">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
+                                    <p class="item-summary">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
                                 @endif
                                 @if ($item->orderItemImage)
                                     <p class="mt-2">

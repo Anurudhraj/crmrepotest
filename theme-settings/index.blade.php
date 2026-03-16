@@ -25,7 +25,7 @@
         <x-setting-card method="POST">
             <x-slot name="header">
                 <div class="s-b-n-header" id="tabs">
-                    <h2 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                    <h2 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                         @lang($pageTitle)</h2>
                 </div>
             </x-slot>
@@ -201,6 +201,7 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('vendor/jquery/bootstrap-colorpicker.js') }}"></script>
     <script src="{{ asset('vendor/jquery/image-picker.min.js') }}"></script>
 
     @if (!user()->dark_theme)

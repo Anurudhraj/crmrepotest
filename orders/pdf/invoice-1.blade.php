@@ -252,7 +252,6 @@
 
         .word-break {
             word-wrap:break-word;
-            word-break: break-all;
         }
 
         #invoice-table td {
@@ -301,7 +300,7 @@
 
                                 <small>@lang("modules.invoices.billedTo"):</small>
                                 @if ($order->client->name && $invoiceSetting->show_client_name == 'yes')
-                                    <div>{{ $order->client->name_salutation }}</div>
+                                    <div>{{ $order->client->name }}</div>
                                 @endif
 
                                 @if ($order->client->email && $invoiceSetting->show_client_email == 'yes')
@@ -309,7 +308,7 @@
                                 @endif
 
                                 @if ($order->client->mobile && $invoiceSetting->show_client_phone == 'yes')
-                                    <div>{{ $order->client->mobile_with_phonecode }}</div>
+                                    <div>{{ $order->client->mobile }}</div>
                                 @endif
 
                                 @if ($order->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -393,12 +392,12 @@
             </thead>
             <tbody>
                 <?php $count = 0; ?>
-                @foreach ($order->items->sortBy('field_order') as $item)
+                @foreach ($order->items as $item)
                     @if ($item->type == 'item')
                         <tr style="page-break-inside: avoid;">
                             <td class="no">{{ ++$count }}</td>
                             <td class="desc">
-                                <h3 class="word-break">{{ $item->item_name }}</h3>
+                                <h3>{{ $item->item_name }}</h3>
                                 @if (!is_null($item->item_summary))
                                 <table>
                                     <tr>

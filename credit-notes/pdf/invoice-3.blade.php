@@ -531,7 +531,6 @@
 
         .word-break {
             word-wrap: break-word;
-            word-break: break-all;
         }
 
         @if($invoiceSetting->locale == 'th')
@@ -604,11 +603,7 @@
                 @if (!is_null($creditNote->project) && !is_null($creditNote->project->client))
                     <span class="description">@lang('modules.credit-notes.billedTo')</span>
                     <div>
-                        <span class="bold">{{ $creditNote->project->client->name_salutation }}</span>
-                    </div>
-
-                    <div>
-                        <span>{{ $creditNote->client->email }}</span>
+                        <span class="bold">{{ $creditNote->project->client->name }}</span>
                     </div>
 
                     <div>
@@ -616,10 +611,12 @@
                     </div>
 
                     <div>
-                        <b>@lang('app.address') :</b>
                         <span>{!! nl2br($creditNote->project->clientDetails->address) !!}</span>
                     </div>
 
+                    <div  class="description">
+                        <span>{{ $creditNote->project->client->email }}</span>
+                    </div  class="description">
                     @if ($creditNoteSetting->show_gst == 'yes' && !is_null($creditNote->project->clientDetails->gst_number))
                         <div>
                             <span> @lang('app.gstIn'): {{ $creditNote->project->clientDetails->gst_number }} </span>
@@ -629,42 +626,7 @@
 
                 @if ($invoiceSetting->show_project == 1 && isset($creditNote->project))
                     <br>
-                    <span class="text-dark-grey  description">@lang('modules.invoices.projectName')</span>
-                    {{ $creditNote->project->project_name }}
-                @endif
-
-            </section>
-        @elseif (is_null($creditNote->project) && !is_null($creditNote->client) && !is_null($creditNote->client->clientDetails))
-            <section id="client-info"  class="description">
-                @if (!is_null($creditNote->client) && !is_null($creditNote->client->clientDetails))
-                    <span class="description">@lang('modules.credit-notes.billedTo')</span>
-                    <div>
-                        <span class="bold">{{ $creditNote->client->name_salutation }}</span>
-                    </div>
-
-                    <div>
-                        <span>{{ $creditNote->client->email }}</span>
-                    </div>
-
-                    <div>
-                        <span>{{ $creditNote->client->clientDetails->company_name }}</span>
-                    </div>
-
-                    <div>
-                        <b>@lang('app.address') :</b>
-                        <span>{!! nl2br($creditNote->client->clientDetails->address) !!}</span>
-                    </div>
-
-                    @if ($creditNoteSetting->show_gst == 'yes' && !is_null($creditNote->client->clientDetails->gst_number))
-                        <div>
-                            <span> @lang('app.gstIn'): {{ $creditNote->client->clientDetails->gst_number }} </span>
-                        </div>
-                    @endif
-                @endif
-
-                @if ($invoiceSetting->show_project == 1 && isset($creditNote->project))
-                    <br>
-                    <span class="text-dark-grey  description">@lang('modules.invoices.projectName')</span>
+                    <span class="text-dark-grey text-capitalize description">@lang('modules.invoices.projectName')</span>
                     {{ $creditNote->project->project_name }}
                 @endif
 
@@ -695,9 +657,9 @@
                             <td>{{ ++$count }}</td>
                             <!-- Don't remove this column as it's needed for the row commands -->
                             <td>
-                                <div class="mb-3 word-break">{{ $item->item_name }}</div>
+                                <div class="mb-3">{{ $item->item_name }}</div>
                                 @if (!is_null($item->item_summary))
-                                    <p class="item-summary mb-3 description word-break">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
+                                    <p class="item-summary mb-3 description">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
                                 @endif
                                 @if ($item->creditNoteItemImage)
                                     <p class="mt-2">

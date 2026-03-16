@@ -16,17 +16,10 @@
             padding: 1rem 0.25rem !important;
         }
 
-        .change-shiftno {
-            padding: 1rem 0.25rem !important;
-        }
-
         #week-end-date, #week-start-date {
             z-index: 0;
         }
 
-        #attendance-data .form-control:focus, .form-control:hover {
-            border-color: #e9ecef;
-        }
 </style>
 
     @if ($manageEmployeeShifts != 'all')

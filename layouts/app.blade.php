@@ -31,7 +31,7 @@
     <!-- Template CSS -->
     <link type="text/css" rel="stylesheet" media="all" href="{{ asset('css/main.css') }}">
 
-    <title>{{ is_array(__($pageTitle)) ? $pageTitle : __($pageTitle) }}</title>
+    <title>@lang($pageTitle)</title>
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="{{ companyOrGlobalSetting()->favicon_url }}">
     <meta name="theme-color" content="#ffffff">
@@ -52,10 +52,7 @@
                 transition: filter .2s ease-out;
                 margin-right: 4px;
             }
-            .ql-editor {
-                text-align: left;
-                white-space: unset;
-            }
+
         </style>
     @endisset
 
@@ -77,7 +74,6 @@
 
         .ql-editor p {
             line-height: 1.42;
-            margin: revert;
         }
 
         .ql-container .ql-tooltip {
@@ -104,9 +100,6 @@
         p {
             word-break: break-word;
         }
-        .inactive{
-            opacity: 0.7;
-        }
     </style>
 
     {{-- Custom theme styles --}}
@@ -120,7 +113,6 @@
 
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/jquery/modernizr.min.js') }}"></script>
-    <script src="{{ asset('vendor/jquery/bootstrap-colorpicker.js') }}"></script>
 
     {{-- Timepicker --}}
     <script src="{{ asset('vendor/jquery/bootstrap-timepicker.min.js') }}" defer="defer"></script>
@@ -137,7 +129,7 @@
 </head>
 
 
-<body id="body" class="{{ user()->dark_theme ? 'dark-theme' : '' }} {{ isRtl('rtl') }}">
+<body id="body" class="{{ user()->dark_theme ? 'dark-theme' : '' }} {{ user()->rtl ? 'rtl' : '' }}">
 <script>
     if (checkMiniSidebar == "yes" || checkMiniSidebar == "") {
         $('body').addClass('sidebar-toggled');
@@ -150,11 +142,11 @@
 @include('sections.sidebar')
 
 <!-- BODY WRAPPER START -->
-<div class="clearfix body-wrapper">
+<div class="body-wrapper clearfix">
 
 
     <!-- MAIN CONTAINER START -->
-    <section class="mb-5 main-container bg-additional-grey mb-sm-0" id="fullscreen">
+    <section class="main-container bg-additional-grey mb-5 mb-sm-0" id="fullscreen">
 
         <div class="preloader-container d-flex justify-content-center align-items-center">
             <div class="spinner-border" role="status" aria-hidden="true"></div>
@@ -163,7 +155,7 @@
 
         @yield('filter-section')
 
-        <x-app-title class="d-block d-lg-none" :pageTitle="$pageTitle"></x-app-title>
+        <x-app-title class="d-block d-lg-none" :pageTitle="__($pageTitle)"></x-app-title>
 
         @yield('content')
 
@@ -323,14 +315,6 @@
         $.ajaxModal(MODAL_XL, url);
     });
 
-    $('body').on('click', '.piechart-full-screen', function () {
-        const chartData = JSON.stringify($(this).data('chart-data'));
-        const chartId = $(this).data('chart-id');
-        const url = "{{ route('front.public.show_piechart').'?chart_data=' }}" + encodeURIComponent(chartData) + "&chart_id=" + chartId;
-        $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
-        $.ajaxModal(MODAL_XL, url);
-    });
-
     function updateOnesignalPlayerId(userId) {
         $.easyAjax({
             url: '{{ route('profile.update_onesignal_id') }}',
@@ -414,7 +398,7 @@
     }
 
     function quillMention(atValues, ID) {
-        const mentionItemTemplate = '<div class="mention-item"> <img src="{image}" class="mr-3 rounded align-self-start taskEmployeeImg">{name}</div>';
+        const mentionItemTemplate = '<div class="mention-item"> <img src="{image}" class="align-self-start mr-3 taskEmployeeImg rounded">{name}</div>';
 
         const customRenderItem = function (item, searchTerm) {
             const html = mentionItemTemplate.replace('{image}', item.image).replace('{name}', item.value);
@@ -706,12 +690,11 @@
             });
         }
 
-        // Reduce server load
-        // if (message_setting.send_sound_notification == 1 && !(pusher_setting.status === 1 && pusher_setting.messages === 1)) {
-        //     window.setInterval(function () {
-        //         checkNewMessage()
-        //     }, 10000); // Check messages every 10 seconds
-        // }
+        if (message_setting.send_sound_notification == 1 && !(pusher_setting.status === 1 && pusher_setting.messages === 1)) {
+            window.setInterval(function () {
+                checkNewMessage()
+            }, 10000); // Check messages every 10 seconds
+        }
 
     </script>
 @endif

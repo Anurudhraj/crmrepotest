@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <x-form id="save-lead-note-data-form">
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('modules.deal.dealNoteDetails')</h4>
 
                 <input type="hidden" name="lead_id" value="{{ $leadId }}">
@@ -11,7 +11,7 @@
 
                     <div class="col-md-6">
                         <x-forms.text fieldId="title" :fieldLabel="__('modules.client.noteTitle')" fieldName="title"
-                            :fieldPlaceholder="__('placeholders.note')">
+                            fieldRequired="true" :fieldPlaceholder="__('placeholders.note')">
                         </x-forms.text>
                     </div>
 
@@ -20,7 +20,7 @@
                 <div class="row px-4">
                     <div class="col-md-12 col-lg-12">
                         <div class="form-group">
-                            <x-forms.label class="my-3" fieldId="notes" fieldRequired="true" :fieldLabel="__('modules.client.noteDetail')">
+                            <x-forms.label class="my-3" fieldId="notes" :fieldLabel="__('modules.client.noteDetail')">
                             </x-forms.label>
                             <div id="details"></div>
                             <textarea name="details" id="details-text" class="d-none"></textarea>

@@ -1,9 +1,3 @@
-<style>
-    .select-action-type {
-        position: relative;
-    }
-</style>
-
 @php
 $addTaskPermission = ($project->project_admin == user()->id) ? 'all' : user()->permission('add_tasks');
 $viewUnassignedTasksPermission = ($project->project_admin == user()->id) ? 'all' : user()->permission('view_unassigned_tasks');
@@ -16,14 +10,6 @@ $projectArchived = $project->trashed();
         <!-- Add Task Export Buttons Start -->
         @if ($projectArchived)
             <x-alert type="info" icon="info-circle">@lang('messages.archivedTaskNotWork')</x-alert>
-        @endif
-
-        @if ($viewUnassignedTasksPermission == 'all' && $unAssignedTask > 0)
-         @php
-            $has = ($unAssignedTask == 1) ? 'has' : 'have';
-            $taskName = ($unAssignedTask == 1) ? 'task' : 'tasks';
-         @endphp
-        <x-alert type="warning" icon="info-circle">@lang('messages.unassignedTask', ['unassigned' => $unAssignedTask, 'task' => $taskName, 'has' => $has]) <a class="unassigned-task" id="unassigned-task" href="javascript:;">@lang('app.clickHere')</a></x-alert>
         @endif
 
         <div class="d-flex" id="table-actions">
@@ -109,12 +95,11 @@ $projectArchived = $project->trashed();
             </form>
 
             <x-datatable.actions class="mt-5">
-                <div class="select-status mr-3 pl-3" data-need-approval="{{ $project->need_approval_by_admin }}">
+                <div class="select-status mr-3 pl-3">
                     <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
                         <option value="">@lang('app.selectAction')</option>
                         <option value="change-status">@lang('modules.tasks.changeStatus')</option>
                         <option value="delete">@lang('app.delete')</option>
-                        <option value="milestone">@lang('app.milestone')</option>
                     </select>
                 </div>
                 <div class="select-status mr-3 d-none quick-action-field" id="change-status-action">
@@ -124,21 +109,12 @@ $projectArchived = $project->trashed();
                         @endforeach
                     </select>
                 </div>
-                <div class="select-milestone mr-3 d-none quick-action-field2 change-milestone-action" id="change-milestone-action">
-                    <select name="milestone" class="form-control select-picker">
-                        @foreach ($project->milestones as $milestone)
-                            @if ($milestone->status == 'incomplete')
-                                <option value="{{ $milestone->id }}">{{ $milestone->milestone_title }}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
             </x-datatable.actions>
         </div>
 
 
         <!-- Task Box Start -->
-        <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
+        <div class="d-flex flex-column w-tables rounded mt-3 bg-white">
 
             {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}
 
@@ -205,79 +181,47 @@ $projectArchived = $project->trashed();
         showTable();
     });
 
-    $('.unassigned-task').click(function() {
-        $('#assignedTo').val('unassigned');
-        $('#assignedTo').selectpicker("refresh");
-        $('#reset-filters').removeClass('d-none');
-        showTable();
-    });
-
-
     $('body').on('click', '.delete-table-row', function() {
         var id = $(this).data('user-id');
-        let activeRunning = $(this).data('active-running');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('tasks.destroy', ':id') }}";
+                url = url.replace(':id', id);
 
-        if (activeRunning == 1) {
+                var token = "{{ csrf_token() }}";
 
-            Swal.fire({
-                title: "@lang('messages.taskTimerRunning')",
-                text: "@lang('messages.stopTheTimer')",
-                icon: 'warning',
-                showConfirmButton: true,
-                confirmButtonText: "@lang('messages.timerOkay')",
-                customClass: {
-                    confirmButton: 'btn btn-primary'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                }
-            });
-        } else {
-            Swal.fire({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.recoverRecord')",
-                icon: 'warning',
-                showCancelButton: true,
-                focusConfirm: false,
-                confirmButtonText: "@lang('messages.confirmDelete')",
-                cancelButtonText: "@lang('app.cancel')",
-                customClass: {
-                    confirmButton: 'btn btn-primary mr-3',
-                    cancelButton: 'btn btn-secondary'
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('tasks.destroy', ':id') }}";
-                    url = url.replace(':id', id);
-
-                    var token = "{{ csrf_token() }}";
-
-                    $.easyAjax({
-                        type: 'POST',
-                        url: url,
-                        data: {
-                            '_token': token,
-                            '_method': 'DELETE'
-                        },
-                        success: function(response) {
-                            if (response.status == "success") {
-                                if($('#unassigned-task').length) {
-                                    window.location.reload() = "{{ route('projects.show', $project->id)}}" + "?tab=tasks";
-                                }
-                                showTable();
-                            }
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            showTable();
                         }
-                    });
-                }
-            });
-        }
+                    }
+                });
+            }
+        });
     });
 
     $('#allTasks-table').on('change', '.change-status', function() {
@@ -285,99 +229,25 @@ $projectArchived = $project->trashed();
         var token = "{{ csrf_token() }}";
         var id = $(this).data('task-id');
         var status = $(this).val();
-        var needApproval = $(this).data('need-approval');
-
-        var rolesJson = `{!! addslashes(json_encode(user()->roles)) !!}`; // Fetch roles JSON and escape special characters
-        var roles = JSON.parse(rolesJson); // Parse JSON string to JavaScript object
-
-        function isAdmin() {
-            for (var i = 0; i < roles.length; i++) {
-                if (roles[i].name === 'admin') {
-                    return true;
-                }
-            }
-        }
 
         if (id != "" && status != "") {
-            if(status == 'completed' && !isAdmin() && needApproval == 1){
-                Swal.fire({
-                    title: "@lang('messages.sweetAlertTitle')",
-                    text: "@lang('messages.approvalmsgsent')",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    focusConfirm: false,
-                    confirmButtonText: "@lang('app.yes')",
-                    cancelButtonText: "@lang('app.no')",
-                    customClass: {
-                        confirmButton: 'btn btn-primary mr-3',
-                        cancelButton: 'btn btn-secondary'
-                    },
-                    showClass: {
-                        popup: 'swal2-noanimation',
-                        backdrop: 'swal2-noanimation'
-                    },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var url = "{{ route('tasks.send_approval', ':id') }}";
-                        url = url.replace(':id', id);
+            $.easyAjax({
+                url: url,
+                type: "POST",
+                data: {
+                    '_token': token,
+                    taskId: id,
+                    status: status,
+                    sortBy: 'id'
+                },
+                success: function(data) {
+                    window.LaravelDataTables["allTasks-table"].draw(false);
+                }
+            });
 
-                        var token = "{{ csrf_token() }}";
-                        var isApproval = 1;
-                        $.easyAjax({
-                            type: 'POST',
-                            url: url,
-                            data: {
-                                '_token': token,
-                                taskId: id,
-                                isApproval: isApproval,
-                                '_method': 'POST'
-                            },
-                            success: function(response) {
-                                if (response.status == "success") {
-                                    showTable();
-                                }
-                            }
-                        });
-                    }
-                });
-            }else{
-                $.easyAjax({
-                    url: url,
-                    type: "POST",
-                    data: {
-                        '_token': token,
-                        taskId: id,
-                        status: status,
-                        sortBy: 'id'
-                    },
-                    success: function(data) {
-                        window.LaravelDataTables["allTasks-table"].draw(false);
-                    }
-                });
-            }
         }
     });
 
-    $('#allTasks-table').on('change', '.change-milestone-action', function() {
-
-        var url = "{{ route('tasks.change_milestone') }}";
-        var token = "{{ csrf_token() }}";
-        var id = $(this).data('task-id');
-        var milestoneId = $(this).val();
-        $.easyAjax({
-            url: url,
-            type: "POST",
-            data: {
-                '_token': token,
-                taskId: id,
-                milestone_id: milestoneId
-            },
-            success: function(data) {
-                window.LaravelDataTables["allTasks-table"].draw(false);
-            }
-        });
-    });
 
     $('#quick-action-type').change(function() {
         const actionValue = $(this).val();
@@ -390,17 +260,9 @@ $projectArchived = $project->trashed();
             } else {
                 $('.quick-action-field').addClass('d-none');
             }
-
-            if (actionValue == 'milestone') {
-                $('.quick-action-field2').addClass('d-none');
-                $('#change-milestone-action').removeClass('d-none');
-            } else {
-                $('.quick-action-field2').addClass('d-none');
-            }
         } else {
             $('#quick-action-apply').attr('disabled', true);
             $('.quick-action-field').addClass('d-none');
-            $('.quick-action-field2').addClass('d-none');
         }
     });
 
@@ -454,7 +316,6 @@ $projectArchived = $project->trashed();
                     showTable();
                     resetActionButtons();
                     deSelectAll();
-                    $('#quick-action-form').hide();
                 }
             }
         })
@@ -495,6 +356,34 @@ $projectArchived = $project->trashed();
         })
     });
 
+    $('#allTasks-table').on('click', '.stop-timer', function() {
+        var id = $(this).data('time-id');
+        var url = "{{ route('timelogs.stop_timer', ':id') }}";
+        url = url.replace(':id', id);
+        var token = '{{ csrf_token() }}';
+        $.easyAjax({
+            url: url,
+            blockUI: true,
+            container: '#allTasks-table',
+            type: "POST",
+            data: {
+                timeId: id,
+                _token: token
+            },
+            success: function(response) {
+                if (response.activeTimerCount > 0) {
+                    $('#show-active-timer .active-timer-count').html(response.activeTimerCount);
+                } else {
+                    $('#show-active-timer .active-timer-count').addClass('d-none');
+                }
+
+                $('#timer-clock').html('');
+                if ($('#allTasks-table').length) {
+                    window.LaravelDataTables["allTasks-table"].draw(false);
+                }
+            }
+        })
+    });
 
     $('#allTasks-table').on('click', '.resume-timer', function() {
         var id = $(this).data('time-id');
@@ -557,12 +446,4 @@ $projectArchived = $project->trashed();
             }
         })
     });
-
-    $('#allTasks-table').on('click', '.stop-timer', function() {
-            var url = "{{ route('timelogs.stopper_alert', ':id') }}?via=timelog";
-            var id = $(this).data('time-id');
-            url = url.replace(':id', id);
-            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
-        })
 </script>

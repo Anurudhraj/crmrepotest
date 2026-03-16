@@ -1,8 +1,8 @@
 @if (in_array('my_task', $activeWidgets) && (!is_null($viewTaskPermission) && $viewTaskPermission != 'none' && in_array('tasks', user_modules())))
     <div class="row">
         <div class="col-sm-12">
-            <div class="card border-0 b-shadow-4 mb-3 e-d-info">
-                <x-cards.data :title="__('modules.tasks.myTask')" padding="false" otherClasses="h-200">
+            <div class="card border-0 b-shadow-4 mb-3 e-d-info" style="border-radius:18px !important">
+                <x-cards.data :title="__('modules.tasks.myTask')" padding="false" otherClasses="h-200" style="border-radius:18px !important">
                     <x-table>
                         <x-slot name="thead">
                             <th>@lang('app.task')#</th>
@@ -44,7 +44,8 @@
                                     @if (is_null($task->due_date))
                                         --
                                     @elseif ($task->due_date->endOfDay()->isPast())
-                                        <span class="text-danger">{{ $task->due_date->translatedFormat(company()->date_format) }}</span>
+                                        <span
+                                            class="text-danger">{{ $task->due_date->translatedFormat(company()->date_format) }}</span>
                                     @elseif ($task->due_date->setTimezone(company()->timezone)->isToday())
                                         <span class="text-success">{{ __('app.today') }}</span>
                                     @else
@@ -55,7 +56,7 @@
                         @empty
                             <tr>
                                 <td colspan="4" class="shadow-none">
-                                    <x-cards.no-record icon="tasks" :message="__('messages.noRecordFound')"/>
+                                    <x-cards.no-record icon="tasks" :message="__('messages.noRecordFound')" />
                                 </td>
                             </tr>
                         @endforelse

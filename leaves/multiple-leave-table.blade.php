@@ -2,13 +2,7 @@
     <x-slot name="thead">
         <th>@lang('app.leaveDate')</th>
         <th>@lang('app.leaveType')</th>
-        <th>@lang('app.paid')</th>
         <th>@lang('app.status')</th>
-        @php
-            if (isset($multipleLeaves)) {
-                $leave = $multipleLeaves[0];
-            }
-        @endphp
         @if ($approveRejectPermission == 'all' || ($deleteLeavePermission == 'all'
                                 || ($deleteLeavePermission == 'added' && user()->id == $leave->added_by)
                                 || ($deleteLeavePermission == 'owned' && user()->id == $leave->user_id)
@@ -22,21 +16,10 @@
     @forelse($multipleLeaves as $leave)
         <tr class="row{{ $leave->id }}">
             <td>
-                {{$leave->leave_date->translatedFormat(company()->date_format)}}<br>
-                ({{ $leave->leave_date->format('l') }})
+                {{$leave->leave_date->translatedFormat(company()->date_format)}}
             </td>
             <td>
                 <span class="badge badge-success" style="background-color:{{$leave->type->color}}">{{ $leave->type->type_name }}</span>
-            </td>
-            <td>
-                @if ($leave->paid == 1)
-                    <span class="badge badge-success">{{ __('app.paid') }}</span>
-                @else
-                    <span class="badge badge-danger">{{ __('app.unpaid') }}</span>
-                @endif
-                @if ($leave->over_utilized == 1)
-                    <br>({{ __('modules.leaves.overUtilized') }})
-                @endif
             </td>
             <td>
                 @php
@@ -56,7 +39,7 @@
 
                 <i class="fa fa-circle mr-1 {{$class}} f-10"></i> {{$status}}
             </td>
-
+{{--            @dd($leaveSetting->manager_permission != 'cannot-approve', user()->id == $leave->user->employeeDetails->reporting_to)--}}
             @if ($approveRejectPermission == 'all' || ($deleteLeavePermission == 'all'
                                 || ($deleteLeavePermission == 'added' && user()->id == $leave->added_by)
                                 || ($deleteLeavePermission == 'owned' && user()->id == $leave->user_id)

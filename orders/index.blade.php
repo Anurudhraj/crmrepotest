@@ -60,7 +60,7 @@
         <!-- MORE FILTERS START -->
         <x-filters.more-filter-box>
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.project')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.project')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="project_id" id="filter_project_id"
@@ -73,9 +73,9 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.status')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.status')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="status" id="status" data-live-search="true"
@@ -125,7 +125,7 @@ $addOrderPermission = user()->permission('add_order');
                     </x-forms.link-primary>
                 @endif
 
-                @if (!in_array('client', user_roles()) && in_array('clients', user_modules()) && ($addOrderPermission == 'all' || $addOrderPermission == 'added'))
+                @if (!in_array('client', user_roles()) && ($addOrderPermission == 'all' || $addOrderPermission == 'added'))
                     <x-forms.link-primary :link="route('orders.create')" class="mr-3 float-left"
                         icon="plus">
                         @lang('app.addNewOrder')
@@ -149,18 +149,6 @@ $addOrderPermission = user()->permission('add_order');
 
 @push('scripts')
     @include('sections.datatable_js')
-
-    @if($bankDetails != null)
-        <script>
-            var bankAccounts = @json($bankDetails->mapWithKeys(function ($account) {
-                return [$account['id'] => $account['bank_name'] . ' | ' . $account['account_name']];
-            }));
-        </script>
-    @else
-        <script>
-            var bankAccounts = {};
-        </script>
-    @endif
 
     <script>
         $('#orders-table').on('preXhr.dt', function(e, settings, data) {
@@ -252,56 +240,22 @@ $addOrderPermission = user()->permission('add_order');
                     buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        if (status === 'completed' && Object.keys(bankAccounts).length > 0) {
-                            Swal.fire({
-                                title: "@lang('messages.selectBank')",
-                                input: 'select',
-                                inputOptions: bankAccounts,
-                                inputPlaceholder: "@lang('messages.selectBank')",
-                                showCancelButton: true,
-                                inputValidator: (value) => {
-                                    return new Promise((resolve) => {
-                                        resolve();
-                                    });
-                                }
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    let selectedBankAccount = result.value;
-
-                                    $.easyAjax({
-                                        url: url,
-                                        type: "POST",
-                                        container: '.content-wrapper',
-                                        blockUI: true,
-                                        data: {
-                                            '_token': token,
-                                            orderId: id,
-                                            status: status,
-                                            bank_account_id: selectedBankAccount
-                                        },
-                                        success: function(data) {
-                                            showTable();
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            $.easyAjax({
-                                url: url,
-                                type: "POST",
-                                container: '.content-wrapper',
-                                blockUI: true,
-                                data: {
-                                    '_token': token,
-                                    orderId: id,
-                                    status: status,
-                                },
-                                success: function(data) {
-                                    showTable();
-                                }
-                            });
-                        }
-                    } else {
+                        $.easyAjax({
+                            url: url,
+                            type: "POST",
+                            container: '.content-wrapper',
+                            blockUI: true,
+                            data: {
+                                '_token': token,
+                                orderId: id,
+                                status: status,
+                            },
+                            success: function(data) {
+                                showTable();
+                            }
+                        });
+                    }
+                    else {
                         showTable();
                     }
                 });

@@ -14,7 +14,7 @@ $addOrderPermission = user()->permission('add_order');
             <!-- Add Task Export Buttons Start -->
 
             <div class="d-flex" id="table-actions">
-                @if (!in_array('client', user_roles()) && in_array('clients', user_modules()) && ($addOrderPermission == 'all' || $addOrderPermission == 'added') && !$project->trashed())
+                @if (!in_array('client', user_roles()) && ($addOrderPermission == 'all' || $addOrderPermission == 'added'))
                     <x-forms.link-primary :link="route('orders.create').'?project_id='.$project->id.'&client_id='.$project->client_id"
                         class="mr-3 openRightModal" icon="plus" data-redirect-url="{{ url()->full() }}">
                         @lang('app.addNewOrder')

@@ -26,7 +26,7 @@
         @endif
     @endif
 @endif
-@if($plugins->where('envato_id', config(strtolower($module) . '.envato_item_id'))->pluck('version')->first() > \Illuminate\Support\Facades\File::get($module->getPath() . '/version.txt'))
+@if($plugins->where('envato_id', config(strtolower($module) . '.envato_item_id'))->pluck('version')->first() > File::get($module->getPath() . '/version.txt'))
     <button type="button" class="ml-1 btn btn-success btn-sm update-module f-11"
             data-product-url="{{ Froiden\Envato\Helpers\FroidenApp::renewSupportUrl(config(strtolower($module) . '.envato_item_id')) }}"
             data-module-name="{{ $module }}">

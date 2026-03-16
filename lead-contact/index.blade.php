@@ -22,7 +22,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
         <div class="d-grid d-lg-flex d-md-flex action-bar">
             <div id="table-actions" class="flex-grow-1 align-items-center">
                 @if ($addLeadPermission == 'all' || $addLeadPermission == 'added')
-                    <x-forms.link-primary :link="route('lead-contact.create')" class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 openRightModal" icon="plus">
+                    <x-forms.link-primary :link="route('lead-contact.create')" class="mr-3 float-left mb-2 mb-lg-0 mb-md-0" icon="plus">
                         @lang('modules.leadContact.addLeadContact')
                     </x-forms.link-primary>
                 @endif
@@ -85,17 +85,17 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
             var min = $('#min').val();
             var max = $('#max').val();
             var type = $('#type').val();
+            var category_id = $('#filter_category_id').val();
             var source_id = $('#filter_source_id').val();
             var date_filter_on = $('#date_filter_on').val();
-            var filter_added_by = $('#filter_addedBy').val();
 
             data['startDate'] = startDate;
-            data['filter_addedBy'] = filter_added_by;
             data['endDate'] = endDate;
             data['searchText'] = searchText;
             data['type'] = type;
             data['min'] = min;
             data['max'] = max;
+            data['category_id'] = category_id;
             data['source_id'] = source_id;
             data['date_filter_on'] = date_filter_on;
         });

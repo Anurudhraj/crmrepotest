@@ -16,18 +16,16 @@ $viewLeavePermission = user()->permission('view_leave');
 $viewDocumentPermission = user()->permission('view_documents');
 $viewAppreciationPermission = user()->permission('view_appreciation');
 $viewImmigrationPermission = user()->permission('view_immigration');
-$viewIncrementPermission = user()->permission('view_increment_promotion');
 @endphp
 
 @php
 
 $showFullProfile = false;
-$employeeDetail = $employee->employeeDetail;
 
 if ($viewPermission == 'all'
-    || ($viewPermission == 'added' && $employeeDetail->added_by == user()->id)
-    || ($viewPermission == 'owned' && $employeeDetail->user_id == user()->id)
-    || ($viewPermission == 'both' && ($employeeDetail->user_id == user()->id || $employeeDetail->added_by == user()->id))
+    || ($viewPermission == 'added' && $employee->employeeDetail->added_by == user()->id)
+    || ($viewPermission == 'owned' && $employee->employeeDetail->user_id == user()->id)
+    || ($viewPermission == 'both' && ($employee->employeeDetail->user_id == user()->id || $employee->employeeDetail->added_by == user()->id))
 ) {
     $showFullProfile = true;
 }
@@ -89,12 +87,6 @@ if ($viewPermission == 'all'
                     @if ($showFullProfile && ($manageEmergencyContact == 'all' || $employee->id == user()->id))
                         <li>
                             <x-tab :href="route('employees.show', $employee->id) . '?tab=emergency-contacts'" :text="__('modules.emergencyContact.emergencyContact')" class="emergency-contacts" />
-                        </li>
-                    @endif
-
-                    @if ($viewIncrementPermission != 'none')
-                        <li>
-                            <x-tab :href="route('employees.show', $employee->id) . '?tab=increment-promotions'" :text="__('modules.incrementPromotion.incrementPromotions')" class="increment-promotions" />
                         </li>
                     @endif
 

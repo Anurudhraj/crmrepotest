@@ -16,6 +16,9 @@
                     <x-tab-item class="ajax-tab" :active="(request('view') === 'pending')"
                         :link="route('leave-report.show', $userId).'?view=pending&startDate='.urlencode($startDate).'&endDate='.urlencode($endDate)">
                         @lang('app.pending')</x-tab-item>
+                    <x-tab-item class="ajax-tab" :active="(request('view') === 'upcoming')"
+                        :link="route('leave-report.show', $userId).'?view=upcoming&startDate='.urlencode($startDate).'&endDate='.urlencode($endDate)">
+                        @lang('app.upcoming')</x-tab-item>
                 </x-tab-section>
 
 

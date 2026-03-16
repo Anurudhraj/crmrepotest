@@ -4,8 +4,11 @@
 
 @php
 $addLeadAgentPermission = user()->permission('add_lead_agent');
+$viewPipelinePermission = user()->permission('view_deal_pipeline');
+$addPipelinePermission = user()->permission('add_deal_pipeline');
 $addLeadSourcesPermission = user()->permission('add_lead_sources');
 $addLeadCategoryPermission = user()->permission('add_lead_category');
+$mangeLeadStagePermission = user()->permission('manage_deal_stages');
 @endphp
 
     <!-- SETTINGS START -->
@@ -24,15 +27,11 @@ $addLeadCategoryPermission = user()->permission('add_lead_category');
                             </a>
                             <a class="nav-item nav-link f-15 agent" href="{{ route('lead-settings.index') }}?tab=agent"
                                 role="tab" aria-controls="nav-leadAgent"
-                                aria-selected="true">@lang('modules.deal.dealAgent')
+                                aria-selected="true">@lang('modules.lead.leadAgent')
                             </a>
                             <a class="nav-item nav-link f-15 category"
                                 href="{{ route('lead-settings.index') }}?tab=category" role="tab"
-                                aria-controls="nav-leadAgent" aria-selected="true">@lang('modules.deal.dealCategory')
-                            </a>
-                            <a class="nav-item nav-link f-15 method"
-                                href="{{ route('lead-settings.index') }}?tab=method" role="tab"
-                                aria-controls="nav-leadAgent" aria-selected="true">@lang('modules.deal.dealMethod')
+                                aria-controls="nav-leadAgent" aria-selected="true">@lang('modules.lead.leadCategory')
                             </a>
                         </div>
                     </nav>
@@ -44,7 +43,7 @@ $addLeadCategoryPermission = user()->permission('add_lead_category');
                     <div class="col-md-12 mb-2">
                         @if ($addLeadAgentPermission != 'none')
                             <x-forms.button-primary icon="plus" id="addAgent" class="agent-btn mb-2 d-none actionBtn">
-                                @lang('app.addNewDealAgent')
+                                @lang('app.addNewLeadAgent')
                             </x-forms.button-primary>
                         @endif
 
@@ -53,17 +52,19 @@ $addLeadCategoryPermission = user()->permission('add_lead_category');
                                 @lang('app.addNewLeadSource')
                             </x-forms.button-primary>
                         @endif
-
-                        <x-forms.button-primary icon="plus" id="addPipeline" class="pipeline-btn mb-2  actionBtn">
-                            @lang('app.addNew') @lang('modules.deal.pipeline')
-                        </x-forms.button-primary>
-
-                        <x-forms.button-primary icon="plus" id="addStage" class="pipeline-btn mb-2  actionBtn">
-                            @lang('app.addNew') @lang('modules.deal.leadStage')
-                        </x-forms.button-primary>
+                        @if($addPipelinePermission != 'none' && $addPipelinePermission != false)
+                            <x-forms.button-primary icon="plus" id="addPipeline" class="pipeline-btn mb-2  actionBtn">
+                                @lang('app.addNew') @lang('modules.deal.pipeline')
+                            </x-forms.button-primary>
+                        @endif
+                        @if($mangeLeadStagePermission != false && $mangeLeadStagePermission != 'none')
+                            <x-forms.button-primary icon="plus" id="addStage" class="pipeline-btn mb-2  actionBtn">
+                                @lang('app.addNew') @lang('modules.deal.leadStage')
+                            </x-forms.button-primary>
+                        @endif
                         @if ($addLeadCategoryPermission != 'none')
                             <x-forms.button-primary icon="plus" id="addCategory" class="category-btn mb-2 d-none actionBtn">
-                                @lang('app.addNewDealCategory')
+                                @lang('app.addNewLeadCategory')
                             </x-forms.button-primary>
                         @endif
                     </div>
@@ -117,10 +118,6 @@ $addLeadCategoryPermission = user()->permission('add_lead_category');
 
         showBtn(activeTab);
         /* MENU SCRIPTS */
-
-        $(document).on('show.bs.dropdown', '.table-responsive', function() {
-            $('.table-responsive').css( "overflow", "inherit" );
-        });
 
         /* LEAD AGENT SCRIPTS */
         /* open add agent modal */
@@ -480,96 +477,6 @@ $addLeadCategoryPermission = user()->permission('add_lead_category');
             });
         });
         /* LEAD CATEGORY */
-
-        $(".change-agent-category").selectpicker({
-            multipleSeparator: ", ",
-            selectedTextFormat: "count > 8",
-            countSelectedText: function(selected, total) {
-                return selected + " {{ __('app.categorySelected') }} ";
-            }
-        });
-
-        $('body').on('change', '.change-agent-category',function(e) {
-            e.preventDefault();
-            var agentId = $(this).data('agent-id');
-            var categoryId = $(this).val();
-            var token = '{{ csrf_token() }}';
-            var url = "{{ route('lead_agents.update_category', ':id') }}";
-            url = url.replace(':id', agentId);
-
-            $.easyAjax({
-                type: 'POST',
-                url: url,
-                blockUI: true,
-                data: {
-                    '_token': token,
-                    'categoryId': categoryId
-                }
-            });
-            return false;
-        });
-        $('body').on('change', '.change-agent-status',function() {
-            var agentId = $(this).data('agent-id');
-            var status = $(this).val();
-            var token = '{{ csrf_token() }}';
-            var url = "{{ route('lead_agents.update_status', ':id') }}";
-            url = url.replace(':id', agentId);
-
-            $.easyAjax({
-                type: 'POST',
-                url: url,
-                blockUI: true,
-                data: {
-                    '_token': token,
-                    'status': status
-                }
-            });
-        });
-
-        /* delete agent */
-        $('body').on('click', '.delete-agents', function() {
-            var id = $(this).data('agent-id');
-            Swal.fire({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.removeAgentText')",
-                icon: 'warning',
-                showCancelButton: true,
-                focusConfirm: false,
-                confirmButtonText: "@lang('messages.confirmDelete')",
-                cancelButtonText: "@lang('app.cancel')",
-                customClass: {
-                    confirmButton: 'btn btn-primary mr-3',
-                    cancelButton: 'btn btn-secondary'
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('lead-agent-settings.destroy', ':id') }}";
-                    url = url.replace(':id', id);
-
-                    var token = "{{ csrf_token() }}";
-
-                    $.easyAjax({
-                        type: 'POST',
-                        url: url,
-                        blockUI: true,
-                        data: {
-                            '_token': token,
-                            '_method': 'DELETE'
-                        },
-                        success: function(response) {
-                            if (response.status == "success") {
-                                $('.row' + id).fadeOut(100);
-                            }
-                        }
-                    });
-                }
-            });
-        });
 
     </script>
 @endpush

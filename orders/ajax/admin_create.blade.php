@@ -2,14 +2,11 @@
 $addProductPermission = user()->permission('add_product');
 @endphp
 
-<!-- for sortable content -->
-<link rel="stylesheet" href="{{ asset('vendor/css/jquery-ui.css') }}">
-
 <!-- CREATE INVOICE START -->
 <div class="bg-white rounded b-shadow-4 create-inv">
     <!-- HEADING START -->
     <div class="px-lg-4 px-md-4 px-3 py-3">
-        <h4 class="mb-0 f-21 font-weight-normal ">@lang('modules.orders.createOrder')</h4>
+        <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('modules.orders.createOrder')</h4>
     </div>
     <!-- HEADING END -->
     <hr class="m-0 border-top-grey">
@@ -36,13 +33,13 @@ $addProductPermission = user()->permission('add_product');
             <!-- INVOICE NUMBER END -->
             <!-- CLIENT START -->
             <div class="col-md-4 mb-4">
-                @if (isset($client))
+                @if (isset($client) && !is_null($client))
                     <div class="form-group">
                         <x-forms.label fieldId="due_date" :fieldLabel="__('app.client')">
                         </x-forms.label>
                         <div class="input-group">
                             <input type="hidden" name="client_id" id="client_id" value="{{ $client->id }}">
-                            <input type="text" value="{{ $client->name_salutation }}"
+                            <input type="text" value="{{ $client->name }}"
                                 class="form-control height-35 f-15 readonly-background" readonly>
                         </div>
                     </div>
@@ -54,7 +51,7 @@ $addProductPermission = user()->permission('add_product');
             <!-- BILLING ADDRESS START -->
             <div class="col-md-4 mb-4">
                 <div class="form-group c-inv-select mb-0">
-                    <label class="f-14 text-dark-grey mb-12  w-100"
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                         for="usr">@lang('modules.invoices.billingAddress')</label>
                     <p class="f-15" id="client_billing_address">
                         @if (isset($client))
@@ -68,7 +65,7 @@ $addProductPermission = user()->permission('add_product');
             <!-- SHIPPING ADDRESS START -->
             <div class="col-md-4">
                 <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
-                    <label class="f-14 text-dark-grey mb-12  w-100"
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                         for="usr">@lang('modules.invoices.shippingAddress') </label>
                     <p class="f-15" id="client_shipping_address">
                         @if (isset($estimate) && $estimate->client && $estimate->client->clientDetails->shipping_address)
@@ -76,7 +73,7 @@ $addProductPermission = user()->permission('add_product');
                         @elseif(isset($client) && $client->clientDetails && $client->clientDetails->shipping_address)
                             {!! nl2br($client->clientDetails->shipping_address) !!}
                         @else
-                            <a href="javascript:;" class="" id="show-shipping-field"><i
+                            <a href="javascript:;" class="text-capitalize" id="show-shipping-field"><i
                                     class="f-12 mr-2 fa fa-plus"></i>@lang('app.addShippingAddress')</a>
                         @endif
                     </p>
@@ -149,30 +146,6 @@ $addProductPermission = user()->permission('add_product');
                 </select>
             </div>
 
-            @if($linkInvoicePermission == 'all')
-                <div class="col-md-4">
-                    <div class="form-group c-inv-select mb-4 d-none">
-                        <x-forms.label fieldId="bank_account_id" :fieldLabel="__('app.bankaccount')">
-                        </x-forms.label>
-                        <div class="select-others height-35 rounded">
-                            <select class="form-control select-picker" data-live-search="true" data-size="8"
-                                    name="bank_account_id" id="bank_account_id">
-                                <option value="">--</option>
-                                @if($viewBankAccountPermission != 'none')
-                                    @foreach ($bankDetails as $bankDetail)
-                                        <option value="{{ $bankDetail->id }}">@if($bankDetail->type == 'bank')
-                                            {{ $bankDetail->bank_name }} | @endif
-                                            {{ $bankDetail->account_name }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mt-3"></div>
-            @endif
-
             <input type="hidden" id="calculate_tax" value="after_discount">
         </div>
 
@@ -230,7 +203,7 @@ $addProductPermission = user()->permission('add_product');
 
         <!-- TOTAL, DISCOUNT START -->
         <div class="d-flex px-lg-4 px-md-4 px-3 pb-3 c-inv-total">
-            <table width="100%" class="text-right f-14 ">
+            <table width="100%" class="text-right f-14 text-capitalize">
                 <tbody>
                     <tr>
                         <td width="50%" class="border-0 d-lg-table d-md-table d-none"></td>
@@ -261,9 +234,9 @@ $addProductPermission = user()->permission('add_product');
                                                                 class="select-others select-tax height-35 rounded border-0">
                                                                 <select class="form-control select-picker"
                                                                     id="discount_type" name="discount_type">
-                                                                    <option @selected(isset($estimate) && $estimate->discount_type == 'percent') value="percent">%
+                                                                    <option @if (isset($estimate) && $estimate->discount_type == 'percent') selected @endif value="percent">%
                                                                     </option>
-                                                                    <option @selected(isset($estimate) && $estimate->discount_type == 'fixed') value="fixed">
+                                                                    <option @if (isset($estimate) && $estimate->discount_type == 'fixed') selected @endif value="fixed">
                                                                         @lang('modules.invoices.amount')</option>
                                                                 </select>
                                                             </div>
@@ -304,7 +277,7 @@ $addProductPermission = user()->permission('add_product');
     <!-- NOTE AND TERMS AND CONDITIONS START -->
     <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
         <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
-            <label class="f-14 text-dark-grey mb-12  w-100"
+            <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                 for="usr">@lang('app.clientNote')</label>
             <textarea class="form-control" name="note" id="note" rows="4"></textarea>
         </div>
@@ -325,33 +298,17 @@ $addProductPermission = user()->permission('add_product');
     <!-- FORM END -->
 </div>
 <!-- CREATE INVOICE END -->
-<!-- for sortable content -->
-<script src="{{ asset('vendor/jquery/jquery-ui.min.js') }}"></script>
-
 <script>
-    $(function () {
-        $("#sortable").sortable();
-    });
-
     $(document).ready(function() {
 
-        $('.toggle-product-category').click(function() {
+         $('.toggle-product-category').click(function() {
             $('.product-category-filter').toggleClass('d-none');
-            var url = "{{route('invoices.product_category', ':id')}}";
-            url = url.replace(':id', null);
-            changeProductCategory(url);
-            $('#product_category_id').val('').trigger('change');
-            $('#product_category_id').selectpicker('refresh');
         });
 
         $('#product_category_id').on('change', function(){
             var categoryId = $(this).val();
-            var url = "{{route('invoices.product_category', ':id')}}";
-            url = (categoryId) ? url.replace(':id', categoryId) : url.replace(':id', null);
-            changeProductCategory(url);
-        });
-
-        function changeProductCategory(url) {
+            var url = "{{route('invoices.product_category', ':id')}}",
+            url = (categoryId) ? url.replace(':id', categoryId) : url.replace(':id', null);;
             $.easyAjax({
                 url : url,
                 type : "GET",
@@ -369,23 +326,15 @@ $addProductPermission = user()->permission('add_product');
                             options.push(selectData);
                         });
                         $('#add-products').html(
-                            '<option value="" class="form-control" >{{  __('app.menu.selectProduct') }}</option>' +
+                            '<option value="" class="form-control" >{{ __('app.select') . ' ' . __('app.product') }}</option>' +
                             options);
                         $('#add-products').selectpicker('refresh');
                     }
                 }
             });
-        }
+        });
 
         const hsn_status = {{ $invoiceSetting->hsn_sac_code_show }};
-
-        $('#status').change(function() {
-            if($(this).val() == 'completed') {
-                $('#bank_account_id').closest('.c-inv-select').removeClass('d-none');
-            } else {
-                $('#bank_account_id').closest('.c-inv-select').addClass('d-none');
-            }
-        });
 
         $('#client_list_id').change(function() {
             var id = $(this).val();
@@ -424,7 +373,7 @@ $addProductPermission = user()->permission('add_product');
 
                             if (response.data.client_details.shipping_address === null) {
                                 var addShippingLink =
-                                    '<a href="javascript:;" class="" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
+                                    '<a href="javascript:;" class="text-capitalize" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
                                 $('#client_shipping_address').html(addShippingLink);
                             } else {
                                 $('#client_shipping_address').html(nl2br(response.data
@@ -439,7 +388,7 @@ $addProductPermission = user()->permission('add_product');
                         }
                     } else {
                         var addShippingLink =
-                            '<a href="javascript:;" class="" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
+                            '<a href="javascript:;" class="text-capitalize" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
                         $('#client_shipping_address').html(addShippingLink);
                     }
                 }

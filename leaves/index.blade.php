@@ -57,7 +57,7 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
         <x-filters.more-filter-box>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.employee')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.employee')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="employee_id" id="employee_id"
@@ -74,7 +74,7 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('modules.leaves.leaveType')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('modules.leaves.leaveType')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" name="leave_type" id="leave_type" data-live-search="true"
@@ -90,7 +90,7 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
 
             @if ($approveRejectPermission == 'all')
                 <div class="more-filter-items">
-                    <label class="f-14 text-dark-grey mb-12 " for="usr">@lang('app.status')</label>
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.status')</label>
                     <div class="select-filter mb-4">
                         <div class="select-others">
                             <select class="form-control select-picker" name="status" id="status" data-live-search="true"
@@ -124,11 +124,6 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
                     <x-forms.link-primary :link="route('leaves.create')" class="mr-3 openRightModal float-left" icon="plus">
                         @lang('modules.leaves.addLeave')
                     </x-forms.link-primary>
-                @endif
-                @if (canDataTableExport())
-                    <x-forms.button-secondary id="export-all" class="mr-3 mb-2 mb-lg-0" icon="file-export">
-                        @lang('app.exportExcel')
-                    </x-forms.button-secondary>
                 @endif
             </div>
 
@@ -220,36 +215,6 @@ $approveRejectPermission = user()->permission('approve_or_reject_leaves');
         const showTable = () => {
             window.LaravelDataTables["leaves-table"].draw(false);
         }
-
-        @if (canDataTableExport())
-            $('#export-all').click(function () {
-
-                @if (request('start') && request('end'))
-                    $('#datatableRange').data('daterangepicker').setStartDate("{{ request('start') }}");
-                    $('#datatableRange').data('daterangepicker').setEndDate("{{ request('end') }}");
-                @endif
-
-                var dateRangePicker = $('#datatableRange').data('daterangepicker');
-
-                let startDate = $('#datatableRange').val();
-
-                let endDate;
-
-                if (startDate == '') {
-                    startDate = null;
-                    endDate = null;
-                } else {
-                    startDate = dateRangePicker.startDate.format('{{ company()->moment_date_format }}');
-                    endDate = dateRangePicker.endDate.format('{{ company()->moment_date_format }}');
-                }
-                console.log(endDate);
-                var url =
-                    "{{ route('leaves.export_all_leave', [':startDate', ':endDate']) }}";
-                url = url.replace(':startDate', startDate).replace(':endDate', endDate);
-                window.location.href = url;
-
-            });
-        @endif
 
         $('#start-date, #end-date, #employee_id, #leave_type, #status').on('change keyup',
             function() {

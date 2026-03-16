@@ -129,10 +129,10 @@
                                  :text="__('app.menu.themeSettings')"/>
         @endif
 
-        @if (user()->permission('manage_module_setting') == 'all')
-            <x-setting-menu-item :active="$activeMenu" menu="module_settings" :href="route('module-settings.index')"
-                                 :text="__('app.menu.moduleSettings')"/>
-        @endif
+        <!--@if (user()->permission('manage_module_setting') == 'all')-->
+        <!--    <x-setting-menu-item :active="$activeMenu" menu="module_settings" :href="route('module-settings.index')"-->
+        <!--                         :text="__('app.menu.moduleSettings')"/>-->
+        <!--@endif-->
 
         @if(isWorksuite())
 
@@ -186,12 +186,12 @@
             @includeIf(strtolower($item).'::sections.setting-sidebar')
         @endforeach
 
-        @if(isWorksuite())
-            @if (in_array('admin', user_roles()) && global_setting()->system_update)
-                <!-- <x-setting-menu-item :active="$activeMenu" menu="update_settings" :href="route('update-settings.index')"
-                                     :text="__('app.menu.updates')"/> -->
-            @endif
-        @endif
+        <!--@if(isWorksuite())-->
+        <!--    @if (in_array('admin', user_roles()) && global_setting()->system_update)-->
+        <!--        <x-setting-menu-item :active="$activeMenu" menu="update_settings" :href="route('update-settings.index')"-->
+        <!--                             :text="__('app.menu.updates')"/>-->
+        <!--    @endif-->
+        <!--@endif-->
 
 
     </ul>

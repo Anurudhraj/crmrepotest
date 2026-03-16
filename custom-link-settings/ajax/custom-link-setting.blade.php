@@ -34,7 +34,11 @@
                                 @endforeach
                             </td>
 
-                            <td>{!! $custom_link->status == 'active' ? \App\Helper\Common::active() : \App\Helper\Common::inactive() !!}</td>
+                            @if ($custom_link->status == 'active')
+                                <td><i class="fa fa-circle mr-1 text-light-green f-10"></i>@lang('app.active')</td>
+                            @else
+                                <td><i class="fa fa-circle mr-1 text-danger f-10"></i>@lang('app.inactive')</td>
+                            @endif
 
                             <td class="text-right">
                                 <div class="task_view">
@@ -43,7 +47,7 @@
                                         <i class="fa fa-edit icons mr-2"></i> @lang('app.edit')
                                     </a>
                                 </div>
-                                <div class="task_view">
+                                <div class="task_view mt-1 mt-lg-0 mt-md-0">
                                     <a class="task_view_more d-flex align-items-center justify-content-center delete-table-row"
                                        href="javascript:;" data-custom_link-id="{{ $custom_link->id }}">
                                         <i class="fa fa-trash icons mr-2"></i> @lang('app.delete')

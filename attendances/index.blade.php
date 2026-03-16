@@ -169,7 +169,7 @@
                     @lang('modules.attendance.absent') &nbsp;|&nbsp; <i class="fa fa-plane-departure text-danger"></i> <i
                         class="fa fa-arrow-right text-lightest f-11 mx-1"></i>
                     @lang('modules.attendance.leave')
-
+    
                 </div>
             </div>
 

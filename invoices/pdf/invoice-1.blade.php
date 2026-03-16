@@ -253,7 +253,6 @@
 
         .word-break {
             word-wrap: break-word;
-            word-break: break-all;
         }
 
         #invoice-table td {
@@ -346,7 +345,7 @@
                             <small>@lang('modules.invoices.billedTo'):</small><br>
 
                             @if ($invoice->project->client->name && $invoiceSetting->show_client_name == 'yes')
-                                {{ $invoice->project->client->name_salutation }}<br>
+                                {{ $invoice->project->client->name }}<br>
                             @endif
 
                             @if ($invoice->project->client->email && $invoiceSetting->show_client_email == 'yes')
@@ -354,7 +353,7 @@
                             @endif
 
                             @if ($invoice->project->client->mobile && $invoiceSetting->show_client_phone == 'yes')
-                                {{ $invoice->project->client->mobile_with_phonecode }}<br>
+                                {{ $invoice->project->client->mobile }}<br>
                             @endif
 
                             @if ($invoice->project->client->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -385,7 +384,7 @@
                             <small>@lang('modules.invoices.billedTo'):</small><br>
 
                             @if ($invoice->client->name && $invoiceSetting->show_client_name == 'yes')
-                                {{ $invoice->client->name_salutation }}<br>
+                                {{ $invoice->client->name }}<br>
                             @endif
 
                             @if ($invoice->client->email && $invoiceSetting->show_client_email == 'yes')
@@ -393,7 +392,7 @@
                             @endif
 
                             @if ($invoice->client->mobile && $invoiceSetting->show_client_phone == 'yes')
-                                {{ $invoice->client->mobile_with_phonecode }}<br>
+                                {{ $invoice->client->mobile }}<br>
                             @endif
 
                             @if ($invoice->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -424,7 +423,7 @@
                             <small>@lang('modules.invoices.billedTo'):</small><br>
 
                             @if ($invoice->estimate->client->name && $invoiceSetting->show_client_name == 'yes')
-                                {{ $invoice->estimate->client->name_salutation }}<br>
+                                {{ $invoice->estimate->client->name }}<br>
                             @endif
 
                             @if ($invoice->estimate->client->email && $invoiceSetting->show_client_email == 'yes')
@@ -432,7 +431,7 @@
                             @endif
 
                             @if ($invoice->estimate->client->mobile && $invoiceSetting->show_client_phone == 'yes')
-                                {{ $invoice->estimate->client->mobile_with_phonecode }}<br>
+                                {{ $invoice->estimate->client->mobile }}<br>
                             @endif
 
                             @if ($invoice->estimate->client->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -527,12 +526,12 @@
             </thead>
             <tbody>
                 <?php $count = 0; ?>
-                @foreach ($invoice->items->sortBy('field_order') as $item)
+                @foreach ($invoice->items as $item)
                     @if ($item->type == 'item')
                         <tr style="page-break-inside: avoid;">
                             <td class="no background-green">{{ ++$count }}</td>
                             <td class="desc text-green">
-                                <h3  class="description word-break">{{ $item->item_name }}</h3>
+                                <h3  class="description">{{ $item->item_name }}</h3>
                                 @if (!is_null($item->item_summary))
                                     <table>
                                         <tr>
@@ -636,28 +635,13 @@
                 @if ($invoiceSetting->authorised_signatory && $invoiceSetting->authorised_signatory_signature && $invoice->status == 'paid')
                     <tr>
                         <td id="signatory" colspan="{{ $invoiceSetting->hsn_sac_code_show ? '7' : '6' }}" style="font-size:15px; border: 0" align="right">
-                            <img src="{{ $invoiceSetting->authorised_signatory_signature_url }}" alt="{{ $company->company_name }}"/><br><br>
-                            <p style="margin-top: 25px;">@lang('modules.invoiceSettings.authorisedSignatory')</p>
+                            <img src="{{ $invoiceSetting->authorised_signatory_signature_url }}" alt="{{ $company->company_name }}"/><br>
+                            @lang('modules.invoiceSettings.authorisedSignatory')
                         </td>
                     </tr>
                 @endif
             </tfoot>
         </table>
-        
-        @if($invoice->invoicePaymentDetail)
-            <table style="width:50%; margin-top:30px;">
-                <tr>
-                    <th class="desc description">@lang('modules.invoices.paymentDetails')</th>
-                </tr>
-                <tr style="page-break-inside: avoid;">
-                    <td class="description" style="text-align: left; border-bottom: 1px solid #e7e9eb;">
-                            <strong>{{ $invoice->invoicePaymentDetail->title }}</strong><br>
-                            {!! !empty($invoice->invoicePaymentDetail->payment_details)
-                            ? nl2br(e($invoice->invoicePaymentDetail->payment_details)) : '--' !!}
-                    </td>
-                </tr>
-            </table>
-        @endif
 
         <p id="notes" class="word-break description">
             <div>

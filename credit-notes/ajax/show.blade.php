@@ -72,14 +72,14 @@
                 <tr class="inv-unpaid">
                     <td class="f-14 text-dark">
                         <p class="mb-0 text-left"><span
-                                class="text-dark-grey ">@lang("modules.invoices.billedTo")</span><br>
-                            {{ $client->name_salutation }}<br>
+                                class="text-dark-grey text-capitalize">@lang("modules.invoices.billedTo")</span><br>
+                            {{ $client->name }}<br>
                             {{ $client->clientDetails->company_name }}<br>
                             {!! nl2br($client->clientDetails->address) !!}
 
                             @if (($invoiceSetting->show_project == 1) && (isset($creditNote->project)))
                             <br><br>
-                            <span class="text-dark-grey ">@lang("modules.invoices.projectName")</span><br>
+                            <span class="text-dark-grey text-capitalize">@lang("modules.invoices.projectName")</span><br>
                             {{ $creditNote->project->project_name }}
                             @endif
                         </p>

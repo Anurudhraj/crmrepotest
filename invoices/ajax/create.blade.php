@@ -4,9 +4,6 @@ $addProductPermission = user()->permission('add_product');
 
 <link rel="stylesheet" href="{{ asset('vendor/css/dropzone.min.css') }}">
 
-<!-- for sortable content -->
-<link rel="stylesheet" href="{{ asset('vendor/css/jquery-ui.css') }}">
-
 @if (!in_array('clients', user_modules()))
     <x-alert class="mb-3" type="danger" icon="exclamation-circle"><span>@lang('messages.enableClientModule')</span>
         <x-forms.link-secondary icon="arrow-left" :link="route('invoices.index')">@lang('app.back')</x-forms.link-secondary>
@@ -19,7 +16,7 @@ $addProductPermission = user()->permission('add_product');
 
     <!-- HEADING START -->
     <div class="px-lg-4 px-md-4 px-3 py-3">
-        <h4 class="mb-0 f-21 font-weight-normal ">@lang('app.invoiceDetails')</h4>
+        <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('app.invoiceDetails')</h4>
     </div>
     <!-- HEADING END -->
     <hr class="m-0 border-top-grey">
@@ -31,8 +28,6 @@ $addProductPermission = user()->permission('add_product');
         @if (isset($type) && $type == 'estimate')
             <input type="hidden" name="estimate_id" value="{{ $estimateId }}">
         @endif
-
-        <input type="hidden" name="do_it_later" id="doItLater" value="direct">
 
         <!-- INVOICE NUMBER, DATE, DUE DATE, FREQUENCY START -->
         <div class="row px-lg-4 px-md-4 px-3 py-3">
@@ -76,7 +71,7 @@ $addProductPermission = user()->permission('add_product');
                         <input type="text" id="due_date" name="due_date"
                             class="px-6 position-relative text-dark font-weight-normal form-control height-35 rounded p-0 text-left f-15"
                             placeholder="@lang('placeholders.date')"
-                            value="{{ now(company()->timezone)->addDays($invoiceSetting->due_after)->format(company()->date_format) }}">
+                            value="{{ Carbon\Carbon::now(company()->timezone)->addDays($invoiceSetting->due_after)->format(company()->date_format) }}">
                     </div>
                 </div>
             </div>
@@ -89,13 +84,12 @@ $addProductPermission = user()->permission('add_product');
                     <div class="select-others height-35 rounded">
                         <select class="form-control select-picker" name="currency_id" id="currency_id">
                             @foreach ($currencies as $currency)
-                                <option @if (isset($estimate))
-                                    @selected($currency->id == $estimate->currency_id)
-                                @elseif (isset($invoice))
-                                    @selected($currency->id == $invoice->currency_id)
+                                <option @if (isset($invoice))
+                                    @if ($currency->id == $invoice->currency_id) selected @endif
                                 @else
-                                    @selected($currency->id == company()->currency_id)
-                                @endif
+                                    @if ($currency->id == company()->currency_id)
+                                        selected @endif
+                            @endif
                             value="{{ $currency->id }}" data-currency-code="{{$currency->currency_code}}">
                             {{ $currency->currency_code . ' (' . $currency->currency_symbol . ')' }}
                             </option>
@@ -105,13 +99,11 @@ $addProductPermission = user()->permission('add_product');
                 </div>
             </div>
             <!-- FREQUENCY END -->
-            {{-- @dd($estimate->exchange_rate) --}}
-            {{-- @dd(isset($estimate) ? $estimate->exchange_rate : (isset($invoice) ? $invoice->exchange_rate : $companyCurrency->exchange_rate)) --}}
             <div class="col-md-2">
                 <x-forms.label fieldId="exchange_rate" :fieldLabel="__('modules.currencySettings.exchangeRate')" fieldRequired="true">
                 </x-forms.label>
                 <input type="number" id="exchange_rate" name="exchange_rate"
-                class="px-6 position-relative text-dark font-weight-normal form-control height-35 rounded p-0 text-left f-15" value="{{ isset($estimateCurrency) ? $estimateCurrency?->exchange_rate : (isset($proposalCurrency) ? $proposalCurrency?->exchange_rate : $companyCurrency->exchange_rate) }}" readonly>
+                class="px-6 position-relative text-dark font-weight-normal form-control height-35 rounded p-0 text-left f-15" value="{{$companyCurrency->exchange_rate}}" readonly>
                 <small id="currency_exchange" class="form-text text-muted"></small>
             </div>
         </div>
@@ -123,14 +115,14 @@ $addProductPermission = user()->permission('add_product');
         <div class="row px-lg-4 px-md-4 px-3 pt-3">
 
             <!-- CLIENT START -->
-            <div class="col-md-4 mb-4 ">
+            <div class="col-md-4 mb-4">
                 @if (isset($client) && !is_null($client))
                     <div class="form-group">
                         <x-forms.label fieldId="due_date" :fieldLabel="__('app.client')">
                         </x-forms.label>
                         <div class="input-group">
                             <input type="hidden" name="client_id" id="client_id" value="{{ $client->id }}">
-                            <input type="text" value="{{ $client->name_salutation }}"
+                            <input type="text" value="{{ $client->name }}"
                                 class="form-control height-35 f-15 readonly-background" readonly>
                         </div>
                     </div>
@@ -163,14 +155,14 @@ $addProductPermission = user()->permission('add_product');
                                 <option value="">--</option>
                                 @if (isset($invoice) && $invoice->client)
                                     @foreach ($invoice->client->projects as $item)
-                                        <option @selected($invoice->project_id == $item->id)  value="{{ $item->id }}"
+                                        <option @if ($invoice->project_id == $item->id) selected @endif value="{{ $item->id }}"
                                                 data-content="{!! '<strong>'.$item->project_short_code."</strong> ".$item->project_name !!}"
                                         >
                                             {{ $item->project_name }}</option>
                                     @endforeach
                                 @elseif (isset($estimate) && $estimate->client)
                                     @foreach ($estimate->client->projects as $item)
-                                            <option @selected($estimate->project_id == $item->id) value="{{ $item->id }}"
+                                            <option @if ($estimate->project_id == $item->id) selected @endif value="{{ $item->id }}"
                                                     data-content="{!! '<strong>'.$item->project_short_code."</strong> ".$item->project_name !!}"
                                             >
                                                 {{ $item->project_name }}</option>
@@ -221,25 +213,9 @@ $addProductPermission = user()->permission('add_product');
                         </div>
                     </div>
                 </div>
+                <div class="col-md-4 mt-3"></div>
             @endif
 
-            <div class="col-md-4">
-                <div class="form-group c-inv-select mb-4">
-                    <x-forms.label fieldId="invoice_payment_id" :fieldLabel="__('modules.invoices.paymentDetails')">
-                    </x-forms.label>
-                    <div class="select-others height-35 rounded">
-                        <select class="form-control select-picker" data-live-search="true" data-size="8"
-                                name="invoice_payment_id" id="invoice_payment_id">
-                            <option value="">--</option>
-                                @foreach ($invoicePayments as $invoicePayment)
-                                    <option value="{{ $invoicePayment->id }}">
-                                        {{ $invoicePayment->title }}
-                                    </option>
-                                @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
 
         </div>
 
@@ -247,7 +223,7 @@ $addProductPermission = user()->permission('add_product');
             <!-- BILLING ADDRESS START -->
             <div class="col-md-4">
                 <div class="form-group c-inv-select mb-0">
-                    <label class="f-14 text-dark-grey mb-12  w-100"
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                         for="usr">@lang('modules.invoices.billingAddress')</label>
                     <p class="f-15" id="client_billing_address">
                         @if (isset($invoice) && $invoice->client)
@@ -266,7 +242,7 @@ $addProductPermission = user()->permission('add_product');
             <!-- SHIPPING ADDRESS START -->
             <div class="col-md-4">
                 <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
-                    <label class="f-14 text-dark-grey mb-12  w-100"
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                         for="usr">@lang('modules.invoices.shippingAddress') </label>
                     <p class="f-15" id="client_shipping_address">
                         @if (isset($invoice) && $invoice->client && $invoice->client->clientDetails->shipping_address)
@@ -275,7 +251,7 @@ $addProductPermission = user()->permission('add_product');
                             $client->clientDetails->shipping_address)
                             {!! nl2br($client->clientDetails->shipping_address) !!}
                         @else
-                            <a href="javascript:;" class="" id="show-shipping-field"><i
+                            <a href="javascript:;" class="text-capitalize" id="show-shipping-field"><i
                                     class="f-12 mr-2 fa fa-plus"></i>@lang('app.addShippingAddress')</a>
                         @endif
                     </p>
@@ -331,13 +307,11 @@ $addProductPermission = user()->permission('add_product');
                         <select class="form-control select-picker" data-live-search="true" data-size="8"
                             id="add-products" title="{{ __('app.menu.selectProduct') }}">
                             @if (in_array('purchase', user_modules()))
-                            @foreach ($products as $item)
-                                @if ((!empty($item->inventory) && count($item->inventory) > 0 && $item->inventory[0]) || ($item->type == 'service'))
-                                    @if (($item->track_inventory == 1 && $item->inventory[0]->net_quantity > 0) || ($item->type == 'service'))
+                                @foreach ($products as $item)
+                                    @if ($item->track_inventory==1 && $item->inventory[0]->net_quantity > 0)
                                         <option data-content="{{ $item->name }}" value="{{ $item->id }}">
                                             {{ $item->name }}</option>
                                     @endif
-                                @endif
                                 @endforeach
                             @else
                                 @foreach ($products as $item)
@@ -345,7 +319,6 @@ $addProductPermission = user()->permission('add_product');
                                         {{ $item->name }}</option>
                                 @endforeach
                             @endif
-
                         </select>
                         <x-slot name="preappend">
                             <a href="javascript:;"
@@ -355,21 +328,12 @@ $addProductPermission = user()->permission('add_product');
                                     class="fa fa-filter"></i></a>
                         </x-slot>
                         @if ($addProductPermission == 'all' || $addProductPermission == 'added')
-                            @if (module_enabled('Purchase') && in_array('purchase', user_modules()))
-                                <x-slot name="append">
-                                    <a href="{{ route('purchase-products.create') }}" data-redirect-url="no"
-                                        class="btn btn-outline-secondary border-grey openRightModal"
-                                        data-toggle="tooltip"
-                                        data-original-title="{{ __('app.add') . ' ' . __('modules.dashboard.newproduct') }}">@lang('app.add')</a>
-                                </x-slot>
-                            @else
-                                <x-slot name="append">
-                                    <a href="{{ route('products.create') }}" data-redirect-url="no"
-                                        class="btn btn-outline-secondary border-grey openRightModal"
-                                        data-toggle="tooltip"
-                                        data-original-title="{{ __('app.add') . ' ' . __('modules.dashboard.newproduct') }}">@lang('app.add')</a>
-                                </x-slot>
-                            @endif
+                            <x-slot name="append">
+                                <a href="{{ route('products.create') }}" data-redirect-url="no"
+                                    class="btn btn-outline-secondary border-grey openRightModal"
+                                    data-toggle="tooltip"
+                                    data-original-title="{{ __('app.add') . ' ' . __('modules.dashboard.newproduct') }}">@lang('app.add')</a>
+                            </x-slot>
                         @endif
                     </x-forms.input-group>
                     </div>
@@ -382,11 +346,6 @@ $addProductPermission = user()->permission('add_product');
                 @foreach ($invoice->items as $key => $item)
                     <!-- DESKTOP DESCRIPTION TABLE START -->
                     <div class="d-flex px-4 py-3 c-inv-desc item-row">
-                        <div class="d-flex align-items-center">
-                            <span class="ui-icon ui-icon-arrowthick-2-n-s mr-2"></span>
-                            <input type="hidden" name="sort_order[]"
-                                   value="{{ $item->id }}">
-                        </div>
 
                         <div class="c-inv-desc-table w-100 d-lg-flex d-md-flex d-block">
                             <table width="100%">
@@ -439,7 +398,7 @@ $addProductPermission = user()->permission('add_product');
                                                     <select class="text-dark-grey float-right border-0 f-12" name="unit_id[]">
                                                         @foreach ($units as $unit)
                                                             <option
-                                                            @selected ($item->unit_id == $unit->id)
+                                                            @if ($item->unit_id == $unit->id) selected @endif
                                                             value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
                                                         @endforeach
                                                     </select>
@@ -504,11 +463,6 @@ $addProductPermission = user()->permission('add_product');
                 @foreach ($estimate->items as $key => $item)
                     <!-- DESKTOP DESCRIPTION TABLE START -->
                     <div class="d-flex px-4 py-3 c-inv-desc item-row">
-                        <div class="d-flex align-items-center">
-                            <span class="ui-icon ui-icon-arrowthick-2-n-s mr-2"></span>
-                            <input type="hidden" name="sort_order[]"
-                                   value="{{ $item->id }}">
-                        </div>
 
                         <div class="c-inv-desc-table w-100 d-lg-flex d-md-flex d-block">
                             <table width="100%">
@@ -561,7 +515,7 @@ $addProductPermission = user()->permission('add_product');
                                                     <select class="text-dark-grey float-right border-0 f-12" name="unit_id[]">
                                                         @foreach ($units as $unit)
                                                             <option
-                                                            @selected($item->unit_id == $unit->id)
+                                                            @if ($item->unit_id == $unit->id) selected @endif
                                                             value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
                                                         @endforeach
                                                     </select>
@@ -644,11 +598,6 @@ $addProductPermission = user()->permission('add_product');
             @else
                 <!-- DESKTOP DESCRIPTION TABLE START -->
                 <div class="d-flex px-4 py-3 c-inv-desc item-row">
-                    <div class="d-flex align-items-center">
-                        <span class="ui-icon ui-icon-arrowthick-2-n-s mr-2"></span>
-                        <input type="hidden" name="sort_order[]"
-                                value="1">
-                    </div>
 
                     <div class="c-inv-desc-table w-100 d-lg-flex d-md-flex d-block">
                         <table width="100%">
@@ -694,7 +643,7 @@ $addProductPermission = user()->permission('add_product');
                                         <select class="text-dark-grey float-right border-0 f-12" name="unit_id[]">
                                             @foreach ($units as $unit)
                                                 <option
-                                                @selected($unit->default == 1)
+                                                @if ($unit->default == 1) selected @endif
                                                 value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
                                             @endforeach
                                         </select>
@@ -782,16 +731,16 @@ $addProductPermission = user()->permission('add_product');
                                                             <input type="number" min="0" name="discount_value"
                                                                 class="form-control f-14 border-0 w-100 text-right discount_value"
                                                                 placeholder="0"
-                                                                value= "{{ isset($estimate) ? $estimate->discount : (isset($invoice) ? $invoice->discount : '0') }}">
+                                                                value="{{ isset($invoice) ? $invoice->discount : '0' }}">
                                                         </td>
                                                         <td width="30%" align="left" class="c-inv-sub-padding">
                                                             <div
                                                                 class="select-others select-tax height-35 rounded border-0">
                                                                 <select class="form-control select-picker"
                                                                     id="discount_type" name="discount_type">
-                                                                    <option  @selected(isset($invoice) && $invoice->discount_type == 'percent') value="percent">%
+                                                                    <option @if (isset($invoice) && $invoice->discount_type == 'percent') selected @endif value="percent">%
                                                                     </option>
-                                                                    <option @selected(isset($invoice) && $invoice->discount_type == 'fixed') value="fixed">
+                                                                    <option @if (isset($invoice) && $invoice->discount_type == 'fixed') selected @endif value="fixed">
                                                                         @lang('modules.invoices.amount')</option>
                                                                 </select>
                                                             </div>
@@ -832,10 +781,10 @@ $addProductPermission = user()->permission('add_product');
         <!-- NOTE AND TERMS AND CONDITIONS START -->
         <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
             <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
-                <x-forms.label fieldId="" class="" :fieldLabel="__('modules.invoices.note')">
+                <x-forms.label fieldId="" class="text-capitalize" :fieldLabel="__('modules.invoices.note')">
                 </x-forms.label>
                 <textarea class="form-control" name="note" id="note" rows="4"
-                    placeholder="@lang('placeholders.invoices.note')">{{ isset($estimate) ? $estimate->note : (isset($invoice) ? $invoice->note : '') }}</textarea>
+                    placeholder="@lang('placeholders.invoices.note')"></textarea>
             </div>
             <div class="col-md-6 col-sm-12 p-0 c-inv-note-terms">
                 <x-forms.label fieldId="" :fieldLabel="__('modules.invoiceSettings.invoiceTerms')">
@@ -961,14 +910,7 @@ $addProductPermission = user()->permission('add_product');
     <!-- FORM END -->
 </div>
 <!-- CREATE INVOICE END -->
-<!-- for sortable content -->
-<script src="{{ asset('vendor/jquery/jquery-ui.min.js') }}"></script>
-
 <script>
-    $(function () {
-        $("#sortable").sortable();
-    });
-
     $(document).ready(function() {
 
         let defaultImage = '';
@@ -1055,21 +997,12 @@ $addProductPermission = user()->permission('add_product');
 
         $('.toggle-product-category').click(function() {
             $('.product-category-filter').toggleClass('d-none');
-            var url = "{{route('invoices.product_category', ':id')}}";
-            url = url.replace(':id', null);
-            changeProductCategory(url);
-            $('#product_category_id').val('').trigger('change');
-            $('#product_category_id').selectpicker('refresh');
         });
 
         $('#product_category_id').on('change', function(){
             var categoryId = $(this).val();
-            var url = "{{route('invoices.product_category', ':id')}}";
+            var url = "{{route('invoices.product_category', ':id')}}",
             url = (categoryId) ? url.replace(':id', categoryId) : url.replace(':id', null);
-            changeProductCategory(url);
-        });
-
-        function changeProductCategory(url) {
             $.easyAjax({
                 url : url,
                 type : "GET",
@@ -1082,20 +1015,18 @@ $addProductPermission = user()->permission('add_product');
                         rData = response.data;
                         $.each(rData, function(index, value) {
                             var selectData = '';
-                            if (value.opening_stock > 0) {
-                                selectData = '<option value="' + value.id + '">' + value.name +
+                            selectData = '<option value="' + value.id + '">' + value.name +
                                 '</option>';
-                                options.push(selectData);
-                            }
+                            options.push(selectData);
                         });
                         $('#add-products').html(
-                            '<option value="" class="form-control" >{{  __('app.menu.selectProduct') }}</option>' +
+                            '<option value="" class="form-control" >{{ __('app.select') . ' ' . __('app.product') }}</option>' +
                             options);
                         $('#add-products').selectpicker('refresh');
                     }
                 }
             });
-        }
+        });
 
         const hsn_status = {{ $invoiceSetting->hsn_sac_code_show }};
         const defaultClient = "{{ request('client_id') }}";
@@ -1169,7 +1100,7 @@ $addProductPermission = user()->permission('add_product');
 
                             if (response.data.client_details.shipping_address === null) {
                                 var addShippingLink =
-                                    '<a href="javascript:;" class="" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
+                                    '<a href="javascript:;" class="text-capitalize" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
                                 $('#client_shipping_address').html(addShippingLink);
                             } else {
                                 $('#client_shipping_address').html(nl2br(response.data
@@ -1184,7 +1115,7 @@ $addProductPermission = user()->permission('add_product');
                         }
                     } else {
                         var addShippingLink =
-                            '<a href="javascript:;" class="" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
+                            '<a href="javascript:;" class="text-capitalize" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>@lang("app.addShippingAddress")</a>';
                         $('#client_shipping_address').html(addShippingLink);
                     }
                 }
@@ -1236,15 +1167,13 @@ $addProductPermission = user()->permission('add_product');
 
         function addProduct(id) {
             var currencyId = $('#currency_id').val();
-            var exchangeRate = $('#exchange_rate').val();
 
             $.easyAjax({
                 url: "{{ route('invoices.add_item') }}",
                 type: "GET",
                 data: {
                     id: id,
-                    currencyId: currencyId,
-                    exchangeRate: exchangeRate
+                    currencyId: currencyId
                 },
                 blockUI: true,
                 success: function(response) {
@@ -1274,11 +1203,6 @@ $addProductPermission = user()->permission('add_product');
             var i = $(document).find('.item_name').length;
             var item =
                 ` <div class="d-flex px-4 py-3 c-inv-desc item-row">
-                <div class="d-flex align-items-center">
-                    <span class="ui-icon ui-icon-arrowthick-2-n-s mr-2"></span>
-                    <input type="hidden" name="sort_order[]"
-                            value="${i+1}">
-                </div>
                 <div class="c-inv-desc-table w-100 d-lg-flex d-md-flex d-block">
                 <table width="100%">
                 <tbody>
@@ -1313,7 +1237,9 @@ $addProductPermission = user()->permission('add_product');
                 <input type="number" min="1" class="form-control f-14 border-0 w-100 text-right quantity mt-3" value="1" name="quantity[]">
                 <select class="text-dark-grey float-right border-0 f-12" name="unit_id[]">
                     @foreach ($units as $unit)
-                        <option @selected ($unit->default == 1) value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
+                        <option
+                        @if ($unit->default == 1) selected @endif
+                        value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
                     @endforeach
                 </select>
                 <input type="hidden" name="product_id[]" value="">
@@ -1372,36 +1298,59 @@ $addProductPermission = user()->permission('add_product');
         });
 
         $('.save-form').click(function() {
-            let totalAmt = $('.total-field').val();
             var type = $(this).data('type');
 
-            if((type == 'send' || type == 'mark_as_send') && totalAmt == 0) {
+            if (KTUtil.isMobileDevice()) {
+                $('.desktop-description').remove();
+            } else {
+                $('.mobile-description').remove();
+            }
+
+            calculateTotal();
+
+            var discount = $('#discount_amount').html();
+            var total = $('.sub-total-field').val();
+
+            if (parseFloat(discount) > parseFloat(total)) {
                 Swal.fire({
-                    title: "@lang('messages.sweetAlertTitle')",
-                    text: "@lang('messages.markAsPaid')",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    focusConfirm: false,
-                    confirmButtonText: "@lang('app.yes')",
-                    cancelButtonText: "@lang('app.no')",
+                    icon: 'error',
+                    text: "{{ __('messages.discountExceed') }}",
+
                     customClass: {
-                        confirmButton: 'btn btn-primary mr-3',
-                        cancelButton: 'btn btn-secondary'
+                        confirmButton: 'btn btn-primary',
                     },
                     showClass: {
                         popup: 'swal2-noanimation',
                         backdrop: 'swal2-noanimation'
                     },
                     buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        saveForm(type, 'direct');
-                    }
                 });
-            } else {
-                saveForm(type, 'direct');
+                return false;
             }
 
+            $.easyAjax({
+                url: "{{ route('invoices.store') }}" + "?type=" + type,
+                container: '#saveInvoiceForm',
+                type: "POST",
+                blockUI: true,
+                redirect: true,
+                file: true,  // Commented so that we dot get error of Input variables exceeded 1000
+                data: $('#saveInvoiceForm').serialize(),
+                success: function(response) {
+
+                    if (response.status === 'success') {
+                        if (typeof invoiceDropzone !== 'undefined' && invoiceDropzone.getQueuedFiles().length > 0) {
+                            invoiceID = response.invoiceID;
+                            $('#invoiceID').val(response.invoiceID);
+                            (response.add_more == true) ? localStorage.setItem("redirect_invoice", window.location.href) : localStorage.setItem("redirect_invoice", response.redirectUrl);
+                            invoiceDropzone.processQueue();
+                        }
+                        else {
+                            window.location.href = response.redirectUrl;
+                        }
+                    }
+                }
+            })
         });
 
         $('#saveInvoiceForm').on('click', '.remove-item', function() {
@@ -1457,72 +1406,6 @@ $addProductPermission = user()->permission('add_product');
         }
     });
 
-
-    function saveForm(type, exceed){
-            $('#doItLater').val(exceed);
-            if (KTUtil.isMobileDevice()) {
-                $('.desktop-description').remove();
-            } else {
-                $('.mobile-description').remove();
-            }
-
-            calculateTotal();
-
-            var discount = $('#discount_amount').html();
-            var total = $('.sub-total-field').val();
-
-            if (parseFloat(discount) > parseFloat(total)) {
-                Swal.fire({
-                    icon: 'error',
-                    text: "{{ __('messages.discountExceed') }}",
-
-                    customClass: {
-                        confirmButton: 'btn btn-primary',
-                    },
-                    showClass: {
-                        popup: 'swal2-noanimation',
-                        backdrop: 'swal2-noanimation'
-                    },
-                    buttonsStyling: false
-                });
-                return false;
-            }
-
-            $.easyAjax({
-                url: "{{ route('invoices.store') }}" + "?type=" + type,
-                container: '#saveInvoiceForm',
-                type: "POST",
-                blockUI: true,
-                redirect: true,
-                file: true,  // Commented so that we dot get error of Input variables exceeded 1000
-                data: $('#saveInvoiceForm').serialize(),
-                success: function(response) {
-                    $(MODAL_DEFAULT).modal('hide');
-                    if (response.status == 'error' && response.showValue === true && exceed == 'direct') {
-                        const productIDs = response.data;
-                        $('#do_it_later').val('true');
-                        const url = "{{ route('invoices.committed_modal') }}" + "?products=" + productIDs + "&type=" + type ;
-
-                        $(MODAL_DEFAULT + ' ' + MODAL_HEADING).html('...');
-                        $.ajaxModal(MODAL_DEFAULT, url);
-                    }
-
-                    if (response.status === 'success') {
-                        if (typeof invoiceDropzone !== 'undefined' && invoiceDropzone.getQueuedFiles().length > 0) {
-                            invoiceID = response.invoiceID;
-                            $('#invoiceID').val(response.invoiceID);
-                            (response.add_more == true) ? localStorage.setItem("redirect_invoice", window.location.href) : localStorage.setItem("redirect_invoice", response.redirectUrl);
-                            invoiceDropzone.processQueue();
-                        }
-                        else {
-                            window.location.href = response.redirectUrl;
-                        }
-                    }
-                }
-            })
-        }
-
-
     function ucWord(str){
             str = str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
                 return letter.toUpperCase();
@@ -1554,7 +1437,7 @@ $addProductPermission = user()->permission('add_product');
                     $('#bank_account_id').html(response.data);
                     $('#bank_account_id').selectpicker('refresh');
                     $('#exchange_rate').val(response.exchangeRate);
-                    let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( '+currentCurrencyName+' @lang('app.to') '+companyCurrencyName+' )' : '';
+                    let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( '+companyCurrencyName+' @lang('app.to') '+currentCurrencyName+' )' : '';
                     $('#currency_exchange').html(currencyExchange);
                 }
             }

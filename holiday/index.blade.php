@@ -31,7 +31,7 @@
                 <select class="form-control select-picker" name="year" id="year" data-live-search="true" data-size="8">
                     @foreach ($years as $year)
                         <option
-                            @selected ($year == $currentYear) value="{{ $year }}">{{ $year }}
+                            @if ($year == $currentYear) selected @endif value="{{ $year }}">{{ $year }}
                         </option>
                     @endforeach
                 </select>

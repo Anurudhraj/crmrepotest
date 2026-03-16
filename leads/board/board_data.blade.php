@@ -1,5 +1,6 @@
 @php
 $addLeadPermission = user()->permission('add_deal');
+$manageStatusPermission = user()->permission('manage_deal_stages');
 $changeStatusPermission = user()->permission('change_deal_stages');
 @endphp
 
@@ -46,11 +47,11 @@ $changeStatusPermission = user()->permission('change_deal_stages');
                          <i class="fa fa-chevron-right mr-1"></i>
                          <i class="fa fa-chevron-left"></i>
                      </a>
-                    @if ($addLeadPermission != 'none' )
+                    @if ($addLeadPermission != 'none' || $manageStatusPermission == 'all')
 
                         <div class="dropdown">
                             <button
-                                class="btn bg-white btn-lg f-10 px-2 py-1 text-dark-grey  rounded  dropdown-toggle"
+                                class="btn bg-white btn-lg f-10 px-2 py-1 text-dark-grey text-capitalize rounded  dropdown-toggle"
                                 type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 <i class="fa fa-ellipsis-h"></i>
@@ -63,12 +64,13 @@ $changeStatusPermission = user()->permission('change_deal_stages');
                                         href="{{ route('deals.create') }}?column_id={{ $column->id }}">@lang('modules.deal.addDeal')
                                         </a>
                                 @endif
+                                @if ($manageStatusPermission == 'all')
                                     <hr class="my-1">
                                      <a class="dropdown-item edit-column"
                                     data-column-id="{{ $column->id }}" href="javascript:;">@lang('app.edit')</a>
+                                @endif
 
-
-                                @if (!$column->default  && $column->slug != 'generated' &&  $column->slug != 'win' && $column->slug != 'lost' )
+                                @if (!$column->default && $manageStatusPermission == 'all' && $column->slug != 'generated' &&  $column->slug != 'win' && $column->slug != 'lost' )
                                     <a class="dropdown-item delete-column"
                                         data-column-id="{{ $column->id }}" href="javascript:;">@lang('app.delete')</a>
                                 @endif
@@ -181,9 +183,6 @@ $changeStatusPermission = user()->permission('change_deal_stages');
                  '_token': '{{ csrf_token() }}'
              },
              success: function() {
-                let leadID = movingTaskId;
-                let statusID = boardColumnId;
-
                 if ($('#' + source.id + ' .task-card').length == 0) {
                     $('#' + source.id + ' .no-task-card').removeClass('d-none');
                 }
@@ -194,23 +193,6 @@ $changeStatusPermission = user()->permission('change_deal_stages');
                 $('#lead-column-count-' + sourceBoardColumnId).text(sourceColumnCount - 1);
                 $('#lead-column-count-' + boardColumnId).text(targetColumnCount + 1);
 
-                $.easyAjax({
-                    url: "{{ route('leadboards.get_stage_slug') }}",
-                    type: 'Post',
-                    data: {
-                        statusID: statusID,
-                        '_token': '{{ csrf_token() }}'
-                    },
-                    success:function(response) {
-                        if (response.slug === 'win' || response.slug === 'lost') {
-                            var modalUrl = "{{ route('deals.stage_change', ':id')}}?via=deal&leadID=" + leadID + "&statusID=" + statusID;
-                            modalUrl = modalUrl.replace(':id', leadID);
-                            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-                            $.ajaxModal(MODAL_LG, modalUrl);
-                            return;
-                        }
-                    }
-                });
              }
          });
 

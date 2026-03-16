@@ -64,7 +64,7 @@
             text-transform: uppercase;
         }
 
-        . {
+        .text-capitalize {
             text-transform: capitalize;
         }
 
@@ -260,18 +260,18 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             @if (isset($client))
-                            <td class="f-14 text-black" style="width:70%">
+                            <td class="f-14 text-black">
 
                                 <p class="line-height mb-0">
                                     <span
-                                        class="text-grey ">@lang("modules.invoices.billedTo")</span><br>
-                                    {{ $client->name_salutation }}<br>
+                                        class="text-grey text-capitalize">@lang("modules.invoices.billedTo")</span><br>
+                                    {{ $client->name }}<br>
                                     {{ $client->clientDetails->company_name }}<br>
                                     {!! nl2br($client->clientDetails->address) !!}
                                 </p>
                             </td>
                             @endif
-                            <td align="right" style="width:30%">
+                            <td align="right">
                                 <br />
                                 <div class="text-uppercase bg-white unpaid rightaligned">
                                     @lang('app.'.$payment->status)

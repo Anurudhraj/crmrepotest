@@ -28,7 +28,7 @@ $moveClass = '';
         @if ($lead->contact->client_name)
             <div class="d-flex mb-3 align-items-center">
                 <i class="fa fa-building f-11 text-lightest"></i><span
-                    class="ml-2 f-11 text-lightest">{{ $lead->contact->client_name_salutation }}</span>
+                    class="ml-2 f-11 text-lightest">{{ $lead->contact->client_name }}</span>
             </div>
         @endif
 

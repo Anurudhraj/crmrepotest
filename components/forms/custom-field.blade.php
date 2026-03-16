@@ -54,7 +54,7 @@
                                 :fieldLabel="$field->label"
                                 :fieldRequired="($field->required === 'yes') ? true : false">
                             </x-forms.label>
-                            <div class="d-flex flex-wrap">
+                            <div class="d-flex">
                                 <input type="hidden" name="custom_fields_data[{{ $field->name . '_' . $field->id }}]"
                                        id="{{$field->field_name.'_'.$field->id}}"/>
                                 @foreach ($field->values as $key => $value)
@@ -90,14 +90,14 @@
                                             :fieldPlaceholder="$field->label"/>
 
                     @elseif($field->type == 'checkbox')
-                        <div class="col-md-12 p-0">
+                        <div class="col-md-6 p-0">
                             <div class="form-group my-3">
                                 <x-forms.label
                                     fieldId="custom_fields_data[{{ $field->field_name . '_' . $field->id }}]"
                                     :fieldLabel="$field->label"
                                     :fieldRequired="($field->required === 'yes') ? true : false">
                                 </x-forms.label>
-                                <div class="d-flex flex-wrap checkbox-{{$field->id}}">
+                                <div class="d-flex checkbox-{{$field->id}}">
                                     @php
                                         $checkedValues = '';
 
@@ -115,7 +115,7 @@
                                             value="{{ $checkedValues }}"
                                            >
                                     @foreach (json_decode($field->values) as $key => $value)
-                                        <div class="col-6 p-0">
+                                        <div class="col-4 p-0">
 
                                             <x-forms.checkbox
                                                 fieldId="optionsRadios{{ $key . $field->id }}"

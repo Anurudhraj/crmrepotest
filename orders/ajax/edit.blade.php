@@ -7,15 +7,11 @@ $addProductPermission = user()->permission('add_product');
     }
 </style>
 
-<!-- for sortable content -->
-<link rel="stylesheet" href="{{ asset('vendor/css/jquery-ui.css') }}">
-
-
 <!-- CREATE ORDER START -->
 <div class="bg-white rounded b-shadow-4 create-inv">
     <!-- HEADING START -->
     <div class="px-lg-4 px-md-4 px-3 py-3">
-        <h4 class="mb-0 f-21 font-weight-normal ">@lang('app.orderDetails')</h4>
+        <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('app.orderDetails')</h4>
     </div>
     <!-- HEADING END -->
     <hr class="m-0 border-top-grey">
@@ -27,7 +23,7 @@ $addProductPermission = user()->permission('add_product');
             <!-- ORDER NUMBER START -->
             <div class="col-md-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
-                    <label class="f-14 text-dark-grey mb-12 "
+                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
                         for="usr">@lang('modules.orders.orderNumber')</label>
                     <div class="input-group">
                         <input type="text" name="order_id" id="order_id"
@@ -128,14 +124,9 @@ $addProductPermission = user()->permission('add_product');
         </div>
 
         <div id="sortable">
-            @foreach ($order->items->sortBy('field_order') as $key => $item)
+            @foreach ($order->items as $key => $item)
                 <!-- DESKTOP DESCRIPTION TABLE START -->
                 <div class="d-flex px-4 py-3 c-inv-desc item-row">
-                    <div class="d-flex align-items-center">
-                        <span class="ui-icon ui-icon-arrowthick-2-n-s mr-2"></span>
-                        <input type="hidden" name="sort_order[]"
-                               value="{{ $item->id }}">
-                    </div>
 
                     <div class="c-inv-desc-table w-100 d-lg-flex d-md-flex d-block">
                         <table width="100%">
@@ -187,7 +178,9 @@ $addProductPermission = user()->permission('add_product');
                                         @else
                                             <select class="text-dark-grey float-right border-0 f-12" name="unit_id[]">
                                                 @foreach ($units as $unit)
-                                                    <option @selected($item->unit_id == $unit->id) value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
+                                                    <option
+                                                    @if ($item->unit_id == $unit->id) selected @endif
+                                                    value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
                                                 @endforeach
                                             </select>
                                             <input type="hidden" name="product_id[]" value="">
@@ -195,13 +188,13 @@ $addProductPermission = user()->permission('add_product');
                                     </td>
                                     <td class="border-bottom-0">
                                         <input type="text" min="1"
-                                               class="f-14 border-0 w-100 text-right form-control" placeholder="--"
+                                               class="f-14 border-0 w-100 text-right form-control" placeholder="0.00"
                                                value="{{ $item->sku }}" name="sku[]" readonly>
                                     </td>
                                     <td class="border-bottom-0">
                                         <input type="number" min="1"
                                             class="f-14 border-0 w-100 text-right cost_per_item bg-additional-grey" placeholder="0.00"
-                                            value="{{ $item->unit_price }}" name="cost_per_item[]" {{ $user->isAdmin($user->id) ? '' : 'readonly' }}>
+                                            value="{{ $item->unit_price }}" name="cost_per_item[]" readonly>
                                     </td>
                                     <td class="border-bottom-0">
                                         <input class="form-control height-35 f-14 border-0 w-100 text-right bg-additional-grey "                            value="{{ $item->tax_list ?: '--' }}" readonly>
@@ -262,7 +255,7 @@ $addProductPermission = user()->permission('add_product');
 
         <!-- TOTAL, DISCOUNT START -->
         <div class="d-flex px-lg-4 px-md-4 px-3 pb-3 c-inv-total">
-            <table width="100%" class="text-right f-14 ">
+            <table width="100%" class="text-right f-14 text-capitalize">
                 <tbody>
                     <tr>
                         <td width="50%" class="border-0 d-lg-table d-md-table d-none"></td>
@@ -301,13 +294,11 @@ $addProductPermission = user()->permission('add_product');
                                                             <div class="select-others select-tax height-35 rounded border-0 {{in_array('client', user_roles()) ? 'd-none' : ''}}">
 
                                                                 <select class="form-control select-picker"
-                                                                        id="discount_type" name="discount_type">
-                                                                    <option
-                                                                        @selected ($order->discount_type == 'percent')
-                                                                        value="percent">%
-                                                                    </option>
-                                                                    <option
-                                                                        @selected ($order->discount_type == 'fixed') value="fixed">
+                                                                    id="discount_type" name="discount_type">
+                                                                    <option @if ($order->discount_type == 'percent') selected @endif
+                                                                        value="percent">%</option>
+                                                                    <option @if ($order->discount_type == 'fixed') selected @endif
+                                                                        value="fixed">
                                                                         @lang('modules.invoices.amount')</option>
                                                                 </select>
                                                             </div>
@@ -351,7 +342,7 @@ $addProductPermission = user()->permission('add_product');
         <!-- NOTE AND TERMS AND CONDITIONS START -->
         <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
             <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
-                <label class="f-14 text-dark-grey mb-12  w-100"
+                <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                     for="usr">@lang('app.clientNote')</label>
                 <textarea class="form-control" name="note" id="note" rows="4"
                     placeholder="@lang('placeholders.invoices.note')">{{ $order->note }}</textarea>
@@ -377,33 +368,17 @@ $addProductPermission = user()->permission('add_product');
 </div>
 <!-- CREATE ORDER END -->
 
-<!-- for sortable content -->
-<script src="{{ asset('vendor/jquery/jquery-ui.min.js') }}"></script>
-
 <script>
-    $(function () {
-        $("#sortable").sortable();
-    });
-
     $(document).ready(function() {
 
         $('.toggle-product-category').click(function() {
             $('.product-category-filter').toggleClass('d-none');
-            var url = "{{route('invoices.product_category', ':id')}}";
-            url = url.replace(':id', null);
-            changeProductCategory(url);
-            $('#product_category_id').val('').trigger('change');
-            $('#product_category_id').selectpicker('refresh');
         });
 
         $('#product_category_id').on('change', function(){
             var categoryId = $(this).val();
-            var url = "{{route('invoices.product_category', ':id')}}";
-            url = (categoryId) ? url.replace(':id', categoryId) : url.replace(':id', null);
-            changeProductCategory(url);
-        });
-
-        function changeProductCategory(url) {
+            var url = "{{route('invoices.product_category', ':id')}}",
+            url = (categoryId) ? url.replace(':id', categoryId) : url.replace(':id', null);;
             $.easyAjax({
                 url : url,
                 type : "GET",
@@ -421,13 +396,13 @@ $addProductPermission = user()->permission('add_product');
                             options.push(selectData);
                         });
                         $('#add-products').html(
-                            '<option value="" class="form-control" >{{  __('app.menu.selectProduct') }}</option>' +
+                            '<option value="" class="form-control" >{{ __('app.select') . ' ' . __('app.product') }}</option>' +
                             options);
                         $('#add-products').selectpicker('refresh');
                     }
                 }
             });
-        }
+        });
 
 
         $('.custom-date-picker').each(function(ind, el) {
@@ -479,7 +454,7 @@ $addProductPermission = user()->permission('add_product');
 
                         if (response.data.clientDetails.shipping_address === null) {
                             var addShippingLink =
-                                `<a href="javascript:;" class="" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>
+                                `<a href="javascript:;" class="text-capitalize" id="show-shipping-field"><i class="f-12 mr-2 fa fa-plus"></i>
                                     @lang("app.addShippingAddress")</a>`;
                             $('#client_shipping_address').html(addShippingLink);
                         } else {

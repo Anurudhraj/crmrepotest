@@ -1,13 +1,13 @@
 <x-auth>
     <form id="login-form" action="{{ route('login') }}" class="ajax-form" method="POST">
         {{ csrf_field() }}
-        <h3 class=" mb-4 f-w-500">@lang('app.login')</h3>
+        <h3 class="text-capitalize mb-4 f-w-500">@lang('app.login')</h3>
 
         <script>
             const facebook = "{{ route('social_login', 'facebook') }}";
             const google = "{{ route('social_login', 'google') }}";
-            const twitter = "{{ route('social_login', 'twitter-oauth-2') }}";
-            const linkedin = "{{ route('social_login', 'linkedin-openid') }}";
+            const twitter = "{{ route('social_login', 'twitter') }}";
+            const linkedin = "{{ route('social_login', 'linkedin') }}";
         </script>
 
         @if ($socialAuthSettings->google_status == 'enable')
@@ -125,7 +125,7 @@
             @endif
         </div>
 
-        <input type="hidden" name="locale" value="{{ session()->has('locale') ? session('locale') : global_setting()->locale }}">
+
     </form>
 
     <x-slot name="scripts">

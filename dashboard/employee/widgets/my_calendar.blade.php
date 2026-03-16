@@ -3,11 +3,11 @@
                 in_array('tickets', user_modules()) || in_array('leaves', user_modules())))
     <div class="row">
         <div class="col-md-12">
-            <x-cards.data :title="__('app.menu.myCalendar')">
+            <x-cards.data :title="__('app.menu.myCalendar')" style="border-radius:18px !important">
                 <div id="calendar"></div>
                 <x-slot name="action">
                     <div class="dropdown ml-auto calendar-action">
-                        <button id="event-btn" class="btn btn-lg f-14 p-0 text-lightest  rounded  dropdown-toggle cal-event" type="button"
+                        <button id="event-btn" class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle cal-event" type="button"
                                 aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-ellipsis-h"></i>
                         </button>

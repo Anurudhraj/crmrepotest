@@ -5,7 +5,7 @@
     <div class="col-sm-12">
         <x-form id="save-attendance-data-form">
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                         @lang('app.attendanceDetails')</h4>
                 <div class="row p-20">
 
@@ -131,20 +131,6 @@
                                 </x-forms.radio>
                                 <x-forms.radio fieldId="half_day_no" :fieldLabel="__('app.no')" fieldValue="no"
                                     fieldName="half_day" checked="true"></x-forms.radio>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 col-xl-3" id="half_day_section" style="display: none;">
-                        <div class="form-group my-3">
-                            <x-forms.label fieldId="duration" :fieldLabel="__('modules.leaves.selectDuration')">
-                            </x-forms.label>
-                            <div class="d-flex">
-                                <x-forms.radio fieldId="first_half_day_yes" :fieldLabel="__('modules.leaves.firstHalf')" fieldName="half_day_duration"
-                                    fieldValue="first_half" checked="true">
-                                </x-forms.radio>
-                                <x-forms.radio fieldId="first_half_day_no" :fieldLabel="__('modules.leaves.secondHalf')" fieldValue="second_half"
-                                    fieldName="half_day_duration"></x-forms.radio>
                             </div>
                         </div>
                     </div>
@@ -288,9 +274,7 @@
                 buttonSelector: "#save-attendance-form",
                 data: $('#save-attendance-data-form').serialize(),
                 success: function(response) {
-                        if ((response.halfDayExist == true && response.requestedHalfDay == 'no') &&
-                        response.halfDayDurEnd == 'no' &&
-                        (response.fullDayExist == false && response.requestedFullDay == 'yes')) {
+                        if (response.halfDayExist == true && response.requestedHalfDay == 'no') {
                             Swal.fire({
                                 title: "@lang('messages.sweetAlertTitle')",
                                 text: "@lang('messages.halfDayAlreadyApplied')",
@@ -314,55 +298,7 @@
                                 }
                             });
 
-                        } else if ((response.fullDayExist == true && response.requestedFullDay == 'no') &&
-                        (response.halfDayExist == false && response.requestedHalfDay == 'yes')) {
-                            Swal.fire({
-                                title: "@lang('messages.sweetAlertTitle')",
-                                text: "@lang('messages.fullDayAlreadyApplied')",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                focusConfirm: false,
-                                confirmButtonText: "@lang('messages.rejectIt')",
-                                cancelButtonText: "@lang('app.cancel')",
-                                customClass: {
-                                    confirmButton: 'btn btn-primary mr-3',
-                                    cancelButton: 'btn btn-secondary'
-                                },
-                                showClass: {
-                                    popup: 'swal2-noanimation',
-                                    backdrop: 'swal2-noanimation'
-                                },
-                                buttonsStyling: false
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    saveAttendanceForm();
-                                }
-                            });
-                        } else if((response.halfDayExist == true && response.requestedHalfDay == 'no') &&
-                            (response.fullDayExist == true && response.requestedFullDay == 'no')){
-                                Swal.fire({
-                                title: "@lang('messages.sweetAlertTitle')",
-                                text: "@lang('messages.leaveAlreadyApplied')",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                focusConfirm: false,
-                                confirmButtonText: "@lang('messages.rejectIt')",
-                                cancelButtonText: "@lang('app.cancel')",
-                                customClass: {
-                                    confirmButton: 'btn btn-primary mr-3',
-                                    cancelButton: 'btn btn-secondary'
-                                },
-                                showClass: {
-                                    popup: 'swal2-noanimation',
-                                    backdrop: 'swal2-noanimation'
-                                },
-                                buttonsStyling: false
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    saveAttendanceForm();
-                                }
-                            });
-                        }else {
+                        } else {
                             saveAttendanceForm();
                         }
                 }
@@ -377,20 +313,5 @@
         })
 
         init(RIGHT_MODAL);
-
-
-        function toggleHalfDaySection() {
-
-            if ($('input[name="half_day"]:checked').val() === 'yes') {
-                $('#half_day_section').show();
-            } else {
-                $('#half_day_section').hide();
-            }
-        }
-
-        $('input[name="half_day"]').change(toggleHalfDaySection);
-
-
-        toggleHalfDaySection();
     });
 </script>

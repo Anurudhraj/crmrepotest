@@ -8,7 +8,7 @@ $addClientPermission = user()->permission('add_clients');
         <x-form id="save-contract-data-form">
             @method('PUT')
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('app.contractDetails')</h4>
                 <div class="row p-20">
                                     <!-- CONTRACT NUMBER START -->
@@ -126,7 +126,7 @@ $addClientPermission = user()->permission('add_clients');
 
                 </div>
 
-                <h4 class="mb-0 p-20 f-21 font-weight-normal  border-top-grey">
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
                     @lang('modules.client.clientDetails')</h4>
                 <div class="row p-20">
                     <div class="col-md-6 col-lg-4">

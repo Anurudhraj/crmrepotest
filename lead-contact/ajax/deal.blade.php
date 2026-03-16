@@ -86,7 +86,7 @@
         </div>
         <!-- Add DEAL Export Buttons End -->
         <!-- DEAL Box Start -->
-        <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
+        <div class="d-flex flex-column w-tables rounded mt-3 bg-white">
 
             {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}
 
@@ -282,39 +282,29 @@
             })
         };
 
-        function changeStage(leadID, elem) {
-            var statusID = $(elem).find(':selected').attr('data-id');
-            var statusSlug = $(elem).find(':selected').attr('data-slug');
+        function changeStage(leadID, statusID) {
 
-            var url = "{{ route('deals.change_stage') }}";
-            var token = "{{ csrf_token() }}";
+        var url = "{{ route('deals.change_stage') }}";
+        var token = "{{ csrf_token() }}";
 
-            $.easyAjax({
-                type: 'POST',
-                url: url,
-                data: {
-                    '_token': token,
-                    'leadID': leadID,
-                    'statusID': statusID
-                },
-                success: function(response) {
-                    if (response.status == "success") {
-
-                        if (statusSlug === 'win' || statusSlug === 'lost') {
-                            var modalUrl = "{{ route('deals.stage_change', ':id')}}?via=deal&leadID=" + leadID + "&statusID=" + statusID;
-                            modalUrl = modalUrl.replace(':id', leadID);
-                            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-                            $.ajaxModal(MODAL_LG, modalUrl);
-                            return;
-                        }
-                        $.easyBlockUI('#leads-table');
-                        $.easyUnblockUI('#leads-table');
-                        showTable();
-                        resetActionButtons();
-                        deSelectAll();
-                    }
+        $.easyAjax({
+            type: 'POST',
+            url: url,
+            data: {
+                '_token': token,
+                'leadID': leadID,
+                'statusID': statusID
+            },
+            success: function(response) {
+                if (response.status == "success") {
+                    $.easyBlockUI('#leads-table');
+                    $.easyUnblockUI('#leads-table');
+                    showTable();
+                    resetActionButtons();
+                    deSelectAll();
                 }
-            });
+            }
+        });
         }
 
         function followUp(leadID) {

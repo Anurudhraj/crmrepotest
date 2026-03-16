@@ -133,7 +133,7 @@
 
         $('#reset-filters').click(function() {
             $('#filter-form')[0].reset();
-            // getDate()
+            getDate()
 
             $('.filter-box .select-picker').selectpicker("refresh");
             $('#reset-filters').addClass('d-none');

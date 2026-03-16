@@ -68,7 +68,7 @@
                             <tr>
                                 <td class="bg-light-grey border-right-0 f-w-500">
                                     @lang('modules.lead.proposal')</td>
-                                <td class="border-left-0">{{ $invoice->proposal_number }}</td>
+                                <td class="border-left-0">#{{ $invoice->id }}</td>
                             </tr>
                             <tr>
                                 <td class="bg-light-grey border-right-0 f-w-500">
@@ -88,15 +88,12 @@
                     <td class="f-14 text-dark">
                         @if ($invoice->lead && ($invoice->lead->contact->client_name || $invoice->lead->contact->client_email || $invoice->lead->contact->mobile || $invoice->lead->contact->company_name || $invoice->lead->contact->address) && (invoice_setting()->show_client_name == 'yes' || invoice_setting()->show_client_email == 'yes' || invoice_setting()->show_client_phone == 'yes' || invoice_setting()->show_client_company_name == 'yes' || invoice_setting()->show_client_company_address == 'yes'))
                         <p class="mb-0 text-left">
-                            <span class="text-dark-grey ">
+                            <span class="text-dark-grey text-capitalize">
                                 @lang("modules.invoices.billedTo")
                             </span><br>
 
-                            @if ($invoice->deal && !empty($invoice->deal->name))
-                                {{ $invoice->deal->name }}<br>
-                            @endif
                             @if ($invoice->lead->contact && $invoice->lead->contact->client_name && invoice_setting()->show_client_name == 'yes')
-                                {{ $invoice->lead->contact->client_name_salutation }}<br>
+                                {{ $invoice->lead->contact->client_name }}<br>
                             @endif
                             @if ($invoice->lead->contact && $invoice->lead->contact->client_email && invoice_setting()->show_client_email == 'yes')
                                 {{ $invoice->lead->contact->client_email }}<br>
@@ -149,7 +146,7 @@
                                         @lang("modules.invoices.amount")
                                         ({{ $invoice->currency->currency_code }})</td>
                                 </tr>
-                                @foreach ($invoice->items->sortBy('field_order') as $item)
+                                @foreach ($invoice->items as $item)
                                     @if ($item->type == 'item')
                                         <tr class="text-dark font-weight-semibold f-13">
                                             <td>{{ $item->item_name }}</td>
@@ -241,7 +238,7 @@
                 </table>
                 <table width="100%" class="inv-desc-mob d-block d-lg-none d-md-none">
 
-                    @foreach ($invoice->items->sortBy('field_order') as $item)
+                    @foreach ($invoice->items as $item)
                         @if ($item->type == 'item')
 
                             <tr>
@@ -412,7 +409,7 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" tabindex="0">
                     <li>
                         <a class="dropdown-item f-14 text-dark"
-                            href="{{ url()->temporarySignedRoute('front.proposal', now()->addDays(\App\Models\GlobalSetting::SIGNED_ROUTE_EXPIRY), $invoice->hash) }}" target="_blank">
+                            href="{{ route('front.proposal', $invoice->hash) }}" target="_blank">
                             <i class="fa fa-link f-w-500 mr-2 f-11"></i> @lang('modules.proposal.publicLink')
                         </a>
                         <a class="dropdown-item f-14 text-dark"

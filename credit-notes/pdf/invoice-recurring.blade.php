@@ -271,10 +271,6 @@
             max-width: 150px !important;
         }
 
-        .word-break {
-            word-wrap: break-word;
-            word-break: break-all;
-        }
     </style>
 </head>
 
@@ -342,7 +338,7 @@
 
                             @if ($invoiceSetting->show_project == 1 && isset($creditNote->project))
                                 <br><br>
-                                <span class="text-grey ">@lang('modules.invoices.projectName')</span><br>
+                                <span class="text-grey text-capitalize">@lang('modules.invoices.projectName')</span><br>
                                 {{ $creditNote->project->project_name }}
                             @endif
                         @endif
@@ -402,9 +398,9 @@
                         <tr style="page-break-inside: avoid;">
                             <td class="no">{{ ++$count }}</td>
                             <td class="desc">
-                                <h3 class="word-break">{{ $item->item_name }}</h3>
+                                <h3>{{ $item->item_name }}</h3>
                                 @if (!is_null($item->item_summary))
-                                    <p class="item-summary word-break">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
+                                    <p class="item-summary">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
                                 @endif
                             </td>
                             <td class="qty">

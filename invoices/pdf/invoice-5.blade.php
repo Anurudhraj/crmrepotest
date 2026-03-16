@@ -67,7 +67,7 @@
             text-transform: uppercase;
         }
 
-        . {
+        .text-capitalize {
             text-transform: capitalize;
         }
 
@@ -267,11 +267,6 @@
         .h3-border {
             border-bottom: 1px solid #AAAAAA;
         }
-
-        .word-break {
-            word-wrap: break-word;
-            word-break: break-all;
-        }
 </style>
     @if($invoiceSetting->locale == 'th')
     <style>
@@ -332,7 +327,7 @@
     <tr>
         <td class="f-12 text-black">
             <p class="line-height mb-0 ">
-                <span class="text-grey ">@lang('modules.invoices.billedFrom')</span><br>
+                <span class="text-grey text-capitalize">@lang('modules.invoices.billedFrom')</span><br>
                 {{ $company->company_name }}<br>
                 @if ($company->company_email)
                     {{ $company->company_email }}<br>
@@ -368,11 +363,11 @@
 
             @if (($invoiceSetting->show_client_name == 'yes' || $invoiceSetting->show_client_email == 'yes' || $invoiceSetting->show_client_phone == 'yes' || $invoiceSetting->show_client_company_name == 'yes' || $invoiceSetting->show_client_company_address == 'yes') && $client)
                 <p class="line-height mb-0">
-                            <span class="text-grey ">
+                            <span class="text-grey text-capitalize">
                                 @lang('modules.invoices.billedTo')</span><br>
 
                     @if ($client->name && $invoiceSetting->show_client_name == 'yes')
-                        {{ $client->name_salutation }}<br>
+                        {{ $client->name }}<br>
                     @endif
 
                     @if ($client->email && $invoiceSetting->show_client_email == 'yes')
@@ -380,7 +375,7 @@
                     @endif
 
                     @if ($client->mobile && $invoiceSetting->show_client_phone == 'yes')
-                        {{ $client->mobile_with_phonecode }}<br>
+                        {{ $client->mobile }}<br>
                     @endif
 
                     @if ($client->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -404,7 +399,7 @@
             @if ($invoiceSetting->show_project == 1 && isset($invoice->project->project_name))
                 <br>
                 <p class="line-height mb-0">
-                    <span class="text-grey ">@lang('modules.invoices.projectName')</span>:
+                    <span class="text-grey text-capitalize">@lang('modules.invoices.projectName')</span>:
                     {{ $invoice->project->project_name }}
                 </p>
             @endif
@@ -425,7 +420,7 @@
                     <td class="f-14 text-black">
                         @if ($invoice->show_shipping_address == 'yes')
                             <p class="line-height"><span
-                                    class="text-grey ">@lang('app.shippingAddress')</span><br>
+                                    class="text-grey text-capitalize">@lang('app.shippingAddress')</span><br>
                                 {!! nl2br($client->clientDetails->shipping_address) !!}</p>
                         @endif
                     </td>
@@ -450,7 +445,7 @@
 
 <table width="100%" class="f-14 b-collapse">
     <tr>
-        <td height="10" colspan={{ $invoiceSetting->hsn_sac_code_show ? '6' : '5' }}></td>
+        <td height="10" colspan="2"></td>
     </tr>
     <!-- Table Row Start -->
     <tr class="main-table-heading text-grey">
@@ -467,11 +462,11 @@
         </td>
     </tr>
     <!-- Table Row End -->
-    @foreach ($invoice->items->sortBy('field_order') as $item)
+    @foreach ($invoice->items as $item)
         @if ($item->type == 'item')
         <!-- Table Row Start -->
             <tr class="f-12 main-table-items text-black">
-                <td width="40%" class="border-bottom-0 word-break">
+                <td width="40%" class="border-bottom-0">
                     {{ $item->item_name }}
                 </td>
                 @if ($invoiceSetting->hsn_sac_code_show)
@@ -490,7 +485,7 @@
             @if ($item->item_summary != '' || $item->invoiceItemImage)
                 {{-- DOMPDF HACK FOR RENDER IN TABLE --}}
                 <tr>
-                    <td colspan="{{ $invoiceSetting->hsn_sac_code_show ? '6' : '5' }}" class="f-13 summary text-black border-bottom-0 description word-break">
+                    <td colspan="{{ $invoiceSetting->hsn_sac_code_show ? '6' : '5' }}" class="f-13 summary text-black border-bottom-0 description">
                         {!! nl2br(pdfStripTags($item->item_summary)) !!}
                         @if ($item->invoiceItemImage)
                             <p class="mt-2">
@@ -596,8 +591,8 @@
                 <img style="height:95px; margin-bottom: -50px; margin-top: 5px; margin-right: 20"
                      src="{{ $invoiceSetting->authorised_signatory_signature_url }}"
                      alt="{{ $company->company_name }}"
-                     id="logo"/><br><br>
-                    <p style="margin-top: 25px;">@lang('modules.invoiceSettings.authorisedSignatory')</p>
+                     id="logo"/><br>
+                @lang('modules.invoiceSettings.authorisedSignatory')
             </td>
         @endif
 
@@ -608,26 +603,6 @@
             <td height="10"></td>
         </tr>
     @endif
-
-    @if($invoice->invoicePaymentDetail)
-        <table class="description mt-4" style="width:50%; border-collapse: collapse; border: 1px solid #FFFFFF;" cellspacing="0" cellpadding="0">
-            <thead>
-                <tr style="border-bottom: 1px solid #e7e9eb; color:#555555; background-color:#e7e9eb; font-size: 0.8em;">
-                    <th class="description" style="text-align: left; padding: 10px; border: 1px solid #e7e9eb;">@lang('modules.invoices.paymentDetails')</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="page-break-inside: avoid;">
-                    <td class="description" style="padding: 10px; color:#555555; border: 1px solid #e7e9eb; font-size: 0.7em;">
-                        <strong>{{ $invoice->invoicePaymentDetail->title }}</strong><br>
-                            {!! !empty($invoice->invoicePaymentDetail->payment_details)
-                            ? nl2br(e($invoice->invoicePaymentDetail->payment_details)) : '--' !!}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    @endif
-
     @if ($invoice->note)
         <tr>
             <td height="10"></td>

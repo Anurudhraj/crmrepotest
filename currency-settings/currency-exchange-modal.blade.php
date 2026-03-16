@@ -36,35 +36,16 @@
             </div>
 
             <div class="col-sm-12 col-lg-6">
-                <x-forms.select fieldId="currency_key_version" fieldLabel="Version" fieldName="currency_key_version">
+                <x-forms.select fieldId="country" fieldLabel="Version" fieldName="currency_key_version">
                     <option {{ (global_setting()->currency_key_version == 'free' ? 'selected' : '')  }} value="free">
                         Free
                     </option>
-                    <option {{ (global_setting()->currency_key_version == 'paid' ? 'selected' : '')  }} value="paid">
+                    <option {{ (global_setting()->currency_key_version == 'api' ? 'selected' : '')  }} value="paid">
                         Paid
-                    </option>
-                    <option {{ (global_setting()->currency_key_version == 'prepaid' ? 'selected' : '')  }} value="prepaid">
-                        Prepaid
-                    </option>
-                    <option {{ (global_setting()->currency_key_version == 'premium' ? 'selected' : '')  }} value="premium">
-                        Premium
-                    </option>
-                    <option {{ (global_setting()->currency_key_version == 'dedicated' ? 'selected' : '')  }} value="dedicated">
-                        Dedicated
                     </option>
                 </x-forms.select>
             </div>
 
-            <div class="col-sm-12 col-lg-12 mt-3" id="dedicated-url" style="display: none;">
-                <x-forms.label class="mt-3" fieldId="dedicated_subdomain"
-                               :fieldLabel="__('modules.accountSettings.dedicatedSubDomain')"
-                               fieldRequired="true"/><i class="fa fa-question-circle" data-toggle="tooltip" data-original-title="@lang('modules.accountSettings.dedicatedSubDomainTooltip')"></i>
-                <x-forms.input-group>
-                    <input type="text" name="dedicated_subdomain" id="dedicated_subdomain"
-                       class="form-control height-35 f-14"
-                       value="{{ !is_null(global_setting()->dedicated_subdomain) ? global_setting()->dedicated_subdomain : '' }}">
-                </x-forms.input-group>
-            </div>
         </div>
 
     </div>
@@ -74,22 +55,6 @@
     </div>
 </x-form>
 <script>
-
-    $('#currency_key_version').change(function() {
-        if ($(this).val() === 'dedicated') {
-            $('#dedicated-url').show();
-        } else {
-            $('#dedicated-url').hide();
-        }
-    });
-
-    // On page load, check if 'dedicated' is selected and show the field
-    $(document).ready(function() {
-        if ($('#currency_key_version').val() === 'dedicated') {
-            $('#dedicated-url').show();
-        }
-    });
-
     $('#save-currency').click(function () {
         $.easyAjax({
             url: "{{route('currency_settings.exchange_key_store')}}",

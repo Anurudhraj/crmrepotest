@@ -20,13 +20,13 @@
         <x-setting-card>
             <x-slot name="header">
                 <div class="s-b-n-header" id="tabs">
-                    <h2 class="mb-0 p-20 f-21 font-weight-normal  border-bottom-grey">
+                    <h2 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                         @lang($pageTitle)</h2>
                 </div>
             </x-slot>
 
             <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100 p-4 ">
-                <h4 class="f-21 font-weight-normal  ">
+                <h4 class="f-21 font-weight-normal text-capitalize ">
                     @lang('modules.moduleSettings.step1')</h4>
 
 
@@ -38,15 +38,15 @@
                             $postMaxSize = \App\Helper\Files::getPostMaxSize();
                         @endphp
 
-                        @if(!$uploadMaxFilesize['greater'])
+                        @if(!$uploadMaxFilesize)
                             <span class="text-danger">
                                     Your Server upload_max_filesize = {{\App\Helper\Files::getUploadMaxFilesize()['size']}}.
                                     Please change to min <strong>{{\App\Helper\Files::REQUIRED_FILE_UPLOAD_SIZE}}MB</strong>
                                     to upload big modules
                             </span>
-                        @elseif(!$postMaxSize['greater'])
+                        @elseif(!$postMaxSize)
                             <span class="text-danger">
-                                    Your Server post_max_size = {{\App\Helper\Files::getPostMaxSize()['size']}}.
+                                    Your Server post_max_size = {{\App\Helper\Files::getUploadMaxFilesize()['size']}}.
                                     Please change to min <strong>{{\App\Helper\Files::REQUIRED_FILE_UPLOAD_SIZE}}MB</strong> to
                                     upload big modules
                             </span>
@@ -63,7 +63,7 @@
             <div class="col-md-12 " id="install-process"></div>
 
             <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100 p-4 ">
-                <h4 class="f-21 font-weight-normal ">
+                <h4 class="f-21 font-weight-normal text-capitalize">
                     @lang('modules.moduleSettings.step2')</h4>
 
                 <p>@lang('modules.update.moduleFile')</p>

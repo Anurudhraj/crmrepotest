@@ -9,7 +9,6 @@ $deleteAttendancePermission = user()->permission('delete_attendance');
     <button type="button"  class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">×</span></button>
 </div>
-
 <div class="modal-body bg-grey">
     <div class="row">
         <div class="col-md-12 mb-4">
@@ -69,7 +68,9 @@ $deleteAttendancePermission = user()->permission('delete_attendance');
                 @endif
 
                 <div class="recent-activity">
+
                     @foreach ($attendanceActivity->reverse() as $item)
+
                         <div class="row res-activity-box" id="timelogBox{{ $item->aId }}">
                             <ul class="res-activity-list col-md-9">
                                 <li>
@@ -104,17 +105,7 @@ $deleteAttendancePermission = user()->permission('delete_attendance');
                                         @if ($item->half_day == 'yes')
                                             <i class="fa fa-sign-out-alt ml-2"></i>
                                             @lang('modules.attendance.halfDay')
-                                            <span>
-                                                @if($item->half_day_type == 'first_half')
-                                                    ( @lang('modules.leaves.1stHalf') )
-                                                @elseif ($item->half_day_type == 'second_half')
-                                                    ( @lang('modules.leaves.2ndHalf') )
-                                                @else
-
-                                                @endif
-                                            </span>
                                         @endif
-
 
                                         @if ($item->latitude != '' && $item->longitude != '')
 
@@ -129,10 +120,6 @@ $deleteAttendancePermission = user()->permission('delete_attendance');
                                         <i class="fa fa-clock"></i>
                                         @if (!is_null($item->clock_out_time))
                                             {{ $item->clock_out_time->timezone(company()->timezone)->translatedFormat(company()->date_format . ' ' . company()->time_format) }}
-                                            @if($item->auto_clock_out)
-                                                <i class="fa fa-sign-out-alt ml-2"></i>
-                                                @lang('modules.attendance.autoClockOut')
-                                            @endif
                                         @else
                                             @lang('modules.attendance.notClockOut')
                                         @endif
@@ -153,7 +140,7 @@ $deleteAttendancePermission = user()->permission('delete_attendance');
                                         || ($deleteAttendancePermission == 'both' && ($item->added_by == user()->id || $attendance->user->id == user()->id))
                                     )
                                     <button
-                                        class="btn btn-lg f-14 py-0 text-lightest  rounded  dropdown-toggle"
+                                        class="btn btn-lg f-14 py-0 text-lightest text-capitalize rounded  dropdown-toggle"
                                         type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-ellipsis-h"></i>
                                     </button>

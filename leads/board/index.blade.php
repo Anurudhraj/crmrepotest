@@ -49,11 +49,11 @@ $viewLeadPermission = user()->permission('view_deals');
                         @lang('modules.deal.addDeal')
                     </x-forms.link-primary>
                 @endif
-
+                @if (user()->permission('manage_deal_stages') == 'all')
                     <x-forms.button-secondary icon="plus" id="add-column">
                         @lang('modules.deal.addStages')
                     </x-forms.button-secondary>
-
+                @endif
             </div>
 
             <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
@@ -93,23 +93,20 @@ $viewLeadPermission = user()->permission('view_deals');
 
             var searchText = $('#search-text-field').val();
             var pipeline = $('#pipeline').val();
-            var product = $('#product').val();
             var min = $('#min').val();
             var max = $('#max').val();
             var type = $('#type').val();
             var followUp = $('#followUp').val();
-            var agent = $('#agent_id').val();
-            var category_id = $('#category').val();
+            var agent = $('#filter_agent_id').val();
+            var category_id = $('#filter_category_id').val();
             var source_id = $('#filter_source_id').val();
             var date_filter_on = $('#date_filter_on').val();
             var status_id = $('#filter_status_id').val();
-            var deal_watcher_id = $('#deal_watcher_agent_id').val();
-            var lead_agent_id = $('#lead_agent_id').val();
 
             var url = "{{ route('leadboards.index') }}?startDate=" + encodeURIComponent(startDate) + '&endDate=' +
                 encodeURIComponent(endDate) + '&type=' + type + '&followUp=' + followUp + '&agent=' +
-                agent + '&category_id=' + category_id + '&source_id=' + source_id +' &deal_watcher_id=' + deal_watcher_id + '&lead_agent_id=' + lead_agent_id +
-                '&searchText=' + searchText  + '&min=' + min + '&max=' + max + '&date_filter_on=' + date_filter_on + '&status_id=' + status_id + '&pipeline=' + pipeline+ '&product=' + product;
+                agent + '&category_id=' + category_id + '&source_id=' + source_id +
+                '&searchText=' + searchText  + '&min=' + min + '&max=' + max + '&date_filter_on=' + date_filter_on + '&status_id=' + status_id + '&pipeline=' + pipeline;
 
             $.easyAjax({
                 url: url,
@@ -144,8 +141,8 @@ $viewLeadPermission = user()->permission('view_deals');
             var max = $('#max').val();
             var type = $('#type').val();
             var followUp = $('#followUp').val();
-            var agent = $('#agent_id').val();
-            var category_id = $('#category').val();
+            var agent = $('#filter_agent_id').val();
+            var category_id = $('#filter_category_id').val();
             var source_id = $('#filter_source_id').val();
             var searchText = $('#search-text-field').val();
             var date_filter_on = $('#date_filter_on').val();
@@ -155,7 +152,7 @@ $viewLeadPermission = user()->permission('view_deals');
                 encodeURIComponent(endDate) + '&type=' + type + '&followUp=' + followUp + '&agent=' +
                 agent + '&category_id=' + category_id + '&source_id=' + source_id +
                 '&searchText=' + searchText + '&columnId=' + columnId + '&currentTotalTasks=' + currentTotalTasks +
-                '&totalTasks=' + totalTasks + '&min=' + min + '&max=' + max + '&date_filter_on=' + date_filter_on + '&pipeline=' + pipeline+ '&product=' + product;
+                '&totalTasks=' + totalTasks + '&min=' + min + '&max=' + max + '&date_filter_on=' + date_filter_on + '&pipeline=' + pipeline;
 
             $.easyAjax({
                 url: url,

@@ -39,7 +39,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
                 <div class="ml-lg-3 ml-md-0 ml-0 mr-3 mr-lg-0 mr-md-3">
                     <div class="dropdown">
                         <button
-                            class="btn btn-lg bg-white border height-35 f-15 px-2 py-1 text-dark-grey  rounded  dropdown-toggle"
+                            class="btn btn-lg bg-white border height-35 f-15 px-2 py-1 text-dark-grey text-capitalize rounded  dropdown-toggle"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             @lang('app.action') <i class="icon-options-vertical icons"></i>
                         </button>
@@ -64,7 +64,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
                                 </a>
 
                                 <a class="dropdown-item"
-                                    href="{{ url()->temporarySignedRoute('front.taskboard', now()->addDays(\App\Models\GlobalSetting::SIGNED_ROUTE_EXPIRY), $project->hash) }}" target="_blank">
+                                    href="{{ route('front.taskboard', $project->hash) }}" target="_blank">
                                     @lang('app.publicTaskBoard')
                                 </a>
                                 <hr class="my-1">
@@ -132,7 +132,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
             <!-- PROJECT PROGRESS END -->
             <!-- CLIENT START -->
             <div class="col-md-6 mb-4">
-                @if (!is_null($project->client) && in_array('clients', user_modules()))
+                @if (!is_null($project->client))
                     <x-cards.data :title="__('app.client')"
                         otherClasses="d-block d-xl-flex d-lg-block d-md-flex  justify-content-between align-items-center">
 
@@ -142,16 +142,16 @@ $memberIds = $project->members->pluck('user_id')->toArray();
 
                                     <div class="card-img m-0">
                                         <img class="" src=" {{ $project->client->image_url }}"
-                                            alt="{{ $project->client->name_salutation }}">
+                                            alt="{{ $project->client->name }}">
                                     </div>
                                     <div class="card-body border-0 p-0 ml-4 ml-xl-4 ml-lg-3 ml-md-3">
                                         <h4 class="card-title f-15 font-weight-normal mb-0">
                                             @if (!in_array('client', user_roles()))
                                                <a href="{{ route('clients.show', $project->client_id) }}" class="text-dark">
-                                                    {{ $project->client->name_salutation }}
+                                                    {{ $project->client->name }}
                                                 </a>
                                             @else
-                                                {{ $project->client->name_salutation }}
+                                                {{ $project->client->name }}
                                             @endif
                                         </h4>
                                         <p class="card-text f-14 text-lightest mb-0">
@@ -159,7 +159,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
                                         </p>
                                         @if ($project->client->country_id)
                                             <span
-                                                class="card-text f-12 text-lightest  d-flex align-items-center">
+                                                class="card-text f-12 text-lightest text-capitalize d-flex align-items-center">
                                                 <span
                                                     class='flag-icon flag-icon-{{ strtolower($project->client->country->iso) }} mr-2'></span>
                                                 {{ $project->client->country->nicename }}
@@ -173,20 +173,22 @@ $memberIds = $project->members->pluck('user_id')->toArray();
 
                         @if( (in_array('admin', user_roles()) && $messageSetting->allow_client_admin == 'yes') ||
                         (in_array('employee', user_roles()) && $messageSetting->allow_client_employee == 'yes') )
-                            <div class="p-client-msg mt-4 mt-xl-0 mt-lg-4 mt-md-0">
-                                <button type="button" class="btn-secondary rounded f-15" id="new-chat"
-                                    data-client-id="{{ $project->client->id }}"> <i class="fab fa-whatsapp mr-1"></i>
-                                    @lang('app.message')</button>
-                            </div>
-                        @endif
-
-                    </x-cards.data>
-                @else
-                    <x-cards.data
-                        otherClasses="d-flex d-xl-flex d-lg-block d-md-flex  justify-content-between align-items-center">
-                        <x-cards.no-record icon="user" :message="__('messages.noClientAddedToProject')" />
-                    </x-cards.data>
+                        <div class="p-client-msg mt-4 mt-xl-0 mt-lg-4 mt-md-0">
+                            <button type="button" class="btn-secondary rounded f-15" id="new-chat"
+                                data-client-id="{{ $project->client->id }}"> <i class="fab fa-whatsapp mr-1"></i>
+                                @lang('app.message')</button>
+                        </div>
                 @endif
+
+
+                </x-cards.data>
+            @else
+                <x-cards.data
+                    otherClasses="d-flex d-xl-flex d-lg-block d-md-flex  justify-content-between align-items-center">
+                    <x-cards.no-record icon="user" :message="__('messages.noClientAddedToProject')" />
+                </x-cards.data>
+                @endif
+
             </div>
             <!-- CLIENT END -->
         </div>
@@ -196,12 +198,9 @@ $memberIds = $project->members->pluck('user_id')->toArray();
         <div class="row mb-4">
             <!-- TASK STATUS START -->
             <div class="col-lg-6 col-md-12">
-                <x-cards.data :title="__('app.menu.tasks')" padding="false" class="pb-3">
-                    @if (array_sum($taskChart['values']) > 0)
-                        <a href="javascript:;" class="text-darkest-grey f-w-500 piechart-full-screen" data-chart-id="task-chart" data-chart-data="{{ json_encode($taskChart) }}"><i class="fas fa-expand float-right mr-3"></i></a>
-                    @endif
+                <x-cards.data :title="__('app.menu.tasks')" padding="false">
                     <x-pie-chart id="task-chart" :labels="$taskChart['labels']" :values="$taskChart['values']"
-                        :colors="$taskChart['colors']" height="200" width="200" />
+                        :colors="$taskChart['colors']" height="220" width="250" />
                 </x-cards.data>
             </div>
             <!-- TASK STATUS END -->
@@ -227,7 +226,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
                     @endif
                 </div>
                 <div class="row">
-                    @if ($viewPaymentPermission == 'all')
+                    @if ($viewPaymentPermission == 'all' and $editProjectPermission == 'all')
                         <div class="col">
                             <x-cards.widget :title="__('app.earnings')"
                                 :value="(!is_null($project->currency) ? currency_format($earnings, $project->currency->id) : currency_format($earnings, company()->currency_id))"
@@ -235,14 +234,14 @@ $memberIds = $project->members->pluck('user_id')->toArray();
                         </div>
                     @endif
 
-                    @if ($viewExpensePermission == 'all')
+                    @if ($viewExpensePermission == 'all' )
                         <div class="col">
                             <x-cards.widget :title="__('modules.projects.expenses_total')"
                                 :value="(!is_null($project->currency) ? currency_format($expenses, $project->currency->id) : currency_format($expenses, company()->currency_id))"
                                 icon="coins" />
                         </div>
                     @endif
-                    @if ($viewPaymentPermission == 'all' && !in_array('client', user_roles()))
+                    @if ($viewPaymentPermission == 'all' and $editProjectPermission == 'all')
                         <div class="col">
                             <x-cards.widget :title="__('modules.projects.profit')"
                                     :value="(!is_null($project->currency) ? currency_format($profit, $project->currency->id) : currency_format($profit, company()->currency_id))"

@@ -456,7 +456,6 @@
 
         .word-break {
             word-wrap: break-word;
-            word-break: break-all;
         }
 
         #notes {
@@ -581,7 +580,7 @@
                     <span>@lang('modules.invoices.billedTo')</span>
                     @if ($invoice->project->client->name && $invoiceSetting->show_client_name == 'yes')
                         <div>
-                            <span class="bold">{{ $invoice->project->client->name_salutation }}</span>
+                            <span class="bold">{{ $invoice->project->client->name }}</span>
                         </div>
                     @endif
 
@@ -593,7 +592,7 @@
 
                     @if ($invoice->project->client->mobile && $invoiceSetting->show_client_phone == 'yes')
                         <div>
-                            <span class="">{{ $invoice->project->client->mobile_with_phonecode }}</span>
+                            <span class="">{{ $invoice->project->client->mobile }}</span>
                         </div>
                     @endif
                     @if ($invoice->project->client->clientDetails->company_name && $invoiceSetting->show_client_company_name == 'yes')
@@ -639,7 +638,7 @@
 
                     @if ($invoice->client->name && $invoiceSetting->show_client_name == 'yes')
                         <div>
-                            <span class="bold">{{ $invoice->client->name_salutation }}</span>
+                            <span class="bold">{{ $invoice->client->name }}</span>
                         </div>
                     @endif
 
@@ -651,7 +650,7 @@
 
                     @if ($invoice->client->mobile && $invoiceSetting->show_client_phone == 'yes')
                         <div>
-                            <span class="">{{ $invoice->client->mobile_with_phonecode }}</span>
+                            <span class="">{{ $invoice->client->mobile }}</span>
                         </div>
                     @endif
 
@@ -691,7 +690,7 @@
                     <span>@lang('modules.invoices.billedTo'):</span>
                     @if ($invoice->estimate->client->name && $invoiceSetting->show_client_name == 'yes')
                         <div>
-                            <span class="bold">{{ $invoice->estimate->client->name_salutation }}</span>
+                            <span class="bold">{{ $invoice->estimate->client->name }}</span>
                         </div>
                     @endif
 
@@ -703,7 +702,7 @@
 
                     @if ($invoice->estimate->client->mobile && $invoiceSetting->show_client_phone == 'yes')
                         <div>
-                            <span class="">{{ $invoice->estimate->client->mobile_with_phonecode }}</span>
+                            <span class="">{{ $invoice->estimate->client->mobile }}</span>
                         </div>
                     @endif
 
@@ -763,15 +762,15 @@
                     </tr>
 
                     <?php $count = 0; ?>
-                    @foreach ($invoice->items->sortBy('field_order') as $item)
+                    @foreach ($invoice->items as $item)
                         @if ($item->type == 'item')
                             <tr data-iterate="item">
                                 <td>{{ ++$count }}</td>
                                 <!-- Don't remove this column as it's needed for the row commands -->
-                                <td class="word-break">
+                                <td>
                                     {{ $item->item_name }}
                                     @if (!is_null($item->item_summary))
-                                        <p class="item-summary word-break">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
+                                        <p class="item-summary">{!! nl2br(pdfStripTags($item->item_summary)) !!}</p>
                                     @endif
                                     @if ($item->invoiceItemImage)
                                         <p class="mt-2">
@@ -853,34 +852,13 @@
                             <table border="0" cellspacing="0" cellpadding="0" width="100%" style="">
                                 <tr>
                                     <td id="signatory" style="font-size:15px; text-align: right">
-                                        <img src="{{ $invoiceSetting->authorised_signatory_signature_url }}" alt="{{ $company->company_name }}"/><br><br>
-                                        <p style="margin-top: 25px;">@lang('modules.invoiceSettings.authorisedSignatory')</p>
+                                        <img src="{{ $invoiceSetting->authorised_signatory_signature_url }}" alt="{{ $company->company_name }}"/><br>
+                                        @lang('modules.invoiceSettings.authorisedSignatory')
                                     </td>
                                 </tr>
                             </table>
                 </section>
                 @endif
-
-                @if($invoice->invoicePaymentDetail)
-                    <div style="width:50%; margin-top:10px;">
-                        <section id="items"  class="description">
-                            <table cellspacing="0" cellpadding="0">
-                                    <tr>
-                                        <th class="description" style="text-align:left;">@lang('modules.invoices.paymentDetails')</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="description">
-                                                <strong>{{ $invoice->invoicePaymentDetail->title }}</strong><br>
-                                                    {!! !empty($invoice->invoicePaymentDetail->payment_details)
-                                                    ? nl2br(e($invoice->invoicePaymentDetail->payment_details)) : '--' !!}
-                                        
-                                        </td>
-                                    </tr>
-                            </table>
-                        </section>
-                    </div>
-                @endif
-            
             <section id="terms">
                 @if ($invoice->note)
                     <div class="word-break item-summary description"><b>@lang('app.note')</b><br>{!! nl2br($invoice->note) !!}</div>
